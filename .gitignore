@@ -1,0 +1,41 @@
+*.env
+.env
+.env.*
+
+# Environment and keys
+credential_info*
+
+# Agent workspace, MCP plugins, and internal tooling
+.agents/
+.opencode/
+.vscode/
+opencode-mcp-figma/
+summary skills/
+AGENTS.md
+backend.log
+
+# Backend service (managed separately)
+SpringBackend/
+
+# Other platforms & experimental builds (Keeping repo focused on mobile application)
+Melo web/
+Melo window/
+melo_landing/
+melo_listen_together_mg/
+melo_listen_together_mg_v2/
+melo_listen_together_mg_v3/
+melo_ui_icons/
+
+# Raw UI screenshot folder (curated images placed in screenshots/)
+UI screen folder/
+
+# Build artifacts & media captures
+/*.mp4
+/*.apk
+aba_screen.png
+aba_test_screen.png
+introducing_melo_showcase.mp4
+build_*_sfx.py
+
+# Unrelated study materials & documents
+*.pdf

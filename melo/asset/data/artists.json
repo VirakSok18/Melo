@@ -1,0 +1,1418 @@
+{
+  "Pop": [
+    {
+      "id": "12246",
+      "name": "Taylor Swift",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebe2e8e7ff002a4afda1c7147e"
+    },
+    {
+      "id": "429675",
+      "name": "Bruno Mars",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebc7688aad1bf03986934d7e26"
+    },
+    {
+      "id": "4050205",
+      "name": "The Weeknd",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebc1719ac9e6a75c1c25835018"
+    },
+    {
+      "id": "1562681",
+      "name": "Ariana Grande",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb766397ec42a573a53eb5fb87"
+    },
+    {
+      "id": "9635624",
+      "name": "Billie Eilish",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb4a21b4760d2ecb7b0dcdc8da"
+    },
+    {
+      "id": "384236",
+      "name": "Ed Sheeran",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebd55c95ad400aed87da52daec"
+    },
+    {
+      "id": "288166",
+      "name": "Justin Bieber",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebaf20f7db5288bce9beede034"
+    },
+    {
+      "id": "11152580",
+      "name": "Olivia Rodrigo",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebb14eb4dcfd2f3858bed06e44"
+    },
+    {
+      "id": "8706544",
+      "name": "Dua Lipa",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb0c68f6c95232e716f0abee8d"
+    },
+    {
+      "id": "75491",
+      "name": "Lady Gaga",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebaadc18cac8d48124357c38e6"
+    }
+  ],
+  "Hip Hop": [
+    {
+      "id": "246791",
+      "name": "Drake",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb4293385d324db8558179afd9"
+    },
+    {
+      "id": "230",
+      "name": "Kanye West",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb6e835a500e791bf9c27a422a"
+    },
+    {
+      "id": "4495513",
+      "name": "Travis Scott",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb19c2790744c792d05570bb71"
+    },
+    {
+      "id": "525046",
+      "name": "Kendrick Lamar",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb39ba6dcd4355c03de0b50918"
+    },
+    {
+      "id": "339209",
+      "name": "J. Cole",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebc401ea77e86ee984b1ba9fc2"
+    },
+    {
+      "id": "7543848",
+      "name": "Post Malone",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebe17c0aa1714a03d62b5ce4e0"
+    },
+    {
+      "id": "74309",
+      "name": "Lil Wayne",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb998010cd1075921b5faf16b2"
+    },
+    {
+      "id": "6853403",
+      "name": "21 Savage",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb4f8f76117470957c0e81e5b2"
+    },
+    {
+      "id": "398521",
+      "name": "Lil Baby",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb514da623c55dc9d2155705dd"
+    },
+    {
+      "id": "9064930",
+      "name": "Cardi B",
+      "image": "https://i.scdn.co/image/ab6761610000e5eba23286f24edd4a7dbdc6311d"
+    }
+  ],
+  "R&B": [
+    {
+      "id": "5531258",
+      "name": "SZA",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebfd0a9fb6c252a3ba44079acf"
+    },
+    {
+      "id": "4050205",
+      "name": "The Weeknd",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebc1719ac9e6a75c1c25835018"
+    },
+    {
+      "id": "102",
+      "name": "Chris Brown",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb913ab85302df0ddfb77131e9"
+    },
+    {
+      "id": "5245183",
+      "name": "Daniel Caesar",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebe4d94f7cbebb17504c25d419"
+    },
+    {
+      "id": "362326",
+      "name": "Khalid",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb8f77c3eddc1869e9542b04bc"
+    },
+    {
+      "id": "7004075",
+      "name": "Bryson Tiller",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebb0ff28b9d4bed74c66901b2b"
+    },
+    {
+      "id": "1350335",
+      "name": "Frank Ocean",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebee3123e593174208f9754fab"
+    },
+    {
+      "id": "17",
+      "name": "USHER",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebb13684907cd609d10d41f0b8"
+    },
+    {
+      "id": "8114447",
+      "name": "H.E.R.",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb417db49cde3ed1c5a65e3514"
+    },
+    {
+      "id": "14482665",
+      "name": "Summer Walker",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb7dccb6280ed3402110d43ce3"
+    }
+  ],
+  "Rock": [
+    {
+      "id": "892",
+      "name": "Coldplay",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb1ba8fc5f5c73e7e9313cc6eb"
+    },
+    {
+      "id": "416239",
+      "name": "Imagine Dragons",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebab47d8dae2b24f5afe7f9d38"
+    },
+    {
+      "id": "1188",
+      "name": "Maroon 5",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebf8349dfb619a7f842242de77"
+    },
+    {
+      "id": "182",
+      "name": "Red Hot Chili Peppers",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebc33cc15260b767ddec982ce8"
+    },
+    {
+      "id": "92",
+      "name": "Linkin Park",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb527d95dabbe8b8b527e8136f"
+    },
+    {
+      "id": "647650",
+      "name": "Twenty One Pilots",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb61a7ea26d33ded218cd1e59d"
+    },
+    {
+      "id": "566",
+      "name": "Foo Fighters",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb1db35bc9c01d2b1c151e44ce"
+    },
+    {
+      "id": "1182",
+      "name": "Arctic Monkeys",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb7da39dea0a72f581535fb11f"
+    },
+    {
+      "id": "705",
+      "name": "Muse",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebccb215d769112ec422a59ce6"
+    },
+    {
+      "id": "402",
+      "name": "Panic! At The Disco",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebb256ae9a4b82bfff97776ae2"
+    }
+  ],
+  "Latin": [
+    {
+      "id": "10583405",
+      "name": "Bad Bunny",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb81f47f44084e0a09b5f0fa13"
+    },
+    {
+      "id": "160",
+      "name": "Shakira",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb17f15f351cba70561ad8bcac"
+    },
+    {
+      "id": "3839",
+      "name": "Daddy Yankee",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb9a6918fd0b2fd675d63c675d"
+    },
+    {
+      "id": "5297021",
+      "name": "KAROL G",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb66041ce9eb4497057cbc3496"
+    },
+    {
+      "id": "4860761",
+      "name": "J Balvin",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb0405b03342c2e56751b9923d"
+    },
+    {
+      "id": "6707",
+      "name": "Luis Fonsi",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebaea7377943d0c989fbef4bc7"
+    },
+    {
+      "id": "1424602",
+      "name": "Maluma",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb1b0d196ca84f4a0d076b4570"
+    },
+    {
+      "id": "4937383",
+      "name": "Ozuna",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb1c4284179078e2529b1630e2"
+    },
+    {
+      "id": "7961888",
+      "name": "Anuel AA",
+      "image": "https://i.scdn.co/image/ab6761610000e5eba23ceb177745632b517cb7b2"
+    },
+    {
+      "id": "15691",
+      "name": "Nicky Jam",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb6705b864a7254d1572039b3d"
+    }
+  ],
+  "K-Pop": [
+    {
+      "id": "268175432",
+      "name": "BTS",
+      "image": "https://cdn-images.dzcdn.net/images/artist/dbabf1a5838446a1d9e3f39ad50c2ab0/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "10803980",
+      "name": "BLACKPINK",
+      "image": "https://cdn-images.dzcdn.net/images/artist/89675729453893a91be35bde691050ff/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "13923487",
+      "name": "Stray Kids",
+      "image": "https://cdn-images.dzcdn.net/images/artist/5cba9e96cd7a44955d47ff3d7eb16ef3/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "161553",
+      "name": "TWICE",
+      "image": "https://cdn-images.dzcdn.net/images/artist/1f4acadade675899b7f775ae4ac67faa/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "178008437",
+      "name": "NewJeans",
+      "image": "https://cdn-images.dzcdn.net/images/artist/0866c2c1d7d00879f5db46ddc1250db8/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "338654",
+      "name": "Red Velvet",
+      "image": "https://cdn-images.dzcdn.net/images/artist/0ab9b143b0b0088987ec777029915bab/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "15065941",
+      "name": "(G)I-DLE",
+      "image": "https://cdn-images.dzcdn.net/images/artist/0e98182f2b8ba9ac671c945211e6c624/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "49280302",
+      "name": "ATEEZ",
+      "image": "https://cdn-images.dzcdn.net/images/artist/3a1e2fc1d84c6633747edf04c00ce12e/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "113547672",
+      "name": "aespa",
+      "image": "https://cdn-images.dzcdn.net/images/artist/c963d7469a999feb764ad6f16c31dd74/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "7161880",
+      "name": "MAMAMOO",
+      "image": "https://cdn-images.dzcdn.net/images/artist/c7a142a623105235451f419b18ca9ef6/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "5501870",
+      "name": "MONSTA X",
+      "image": "https://cdn-images.dzcdn.net/images/artist/ffe1520808bf74015ba44be3302ac9fc/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "6209854",
+      "name": "GOT7",
+      "image": "https://cdn-images.dzcdn.net/images/artist/163a1fbee9b5581d0311ddbead5c056d/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "1377613",
+      "name": "SHINee",
+      "image": "https://cdn-images.dzcdn.net/images/artist/bb0772d5607502ea2a606a6f6c6d58be/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "168158797",
+      "name": "LE SSERAFIM",
+      "image": "https://cdn-images.dzcdn.net/images/artist/e789ab2d16cad9a738cd83722940512b/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "153042292",
+      "name": "IVE",
+      "image": "https://cdn-images.dzcdn.net/images/artist/6b485876ae2f3513f77eee2ebd8d4994/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "1020444",
+      "name": "Super Junior",
+      "image": "https://cdn-images.dzcdn.net/images/artist/505c7afb4f26e395223ea5e7aaee49de/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "1310497",
+      "name": "Girls' Generation",
+      "image": "https://cdn-images.dzcdn.net/images/artist/8e2c5ba1fc6eba4a25d5d5e76b3b66e4/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "267273652",
+      "name": "ENHYPEN",
+      "image": "https://cdn-images.dzcdn.net/images/artist/d41d8cd98f00b204e9800998ecf8427e/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "8904144",
+      "name": "Sunmi",
+      "image": "https://cdn-images.dzcdn.net/images/artist/a61dd0ff004e0fe0406c207608e3a2a0/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "6779515",
+      "name": "Apink",
+      "image": "https://cdn-images.dzcdn.net/images/artist/9172b16409d674e95f48fbc24b70dafb/500x500-000000-80-0-0.jpg"
+    }
+  ],
+  "Jazz": [
+    {
+      "id": "1910",
+      "name": "Miles Davis",
+      "image": "https://i.scdn.co/image/ab6772690000c46c12f90798134ecfe8dcb99db6"
+    },
+    {
+      "id": "810",
+      "name": "Norah Jones",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebed83d3ea063d87ce7e708f00"
+    },
+    {
+      "id": "2337",
+      "name": "Louis Armstrong",
+      "image": "https://i.scdn.co/image/ab6772690000c46c53b6519baafe8f4d6135453e"
+    },
+    {
+      "id": "3280",
+      "name": "Ella Fitzgerald",
+      "image": "https://i.scdn.co/image/3c1d23141059785c8a863137d176319329dc17ef"
+    },
+    {
+      "id": "4080",
+      "name": "Dave Brubeck",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb6d3c5411d37f2ef3138001be"
+    },
+    {
+      "id": "2060",
+      "name": "Bill Evans",
+      "image": "https://i.scdn.co/image/ab6772690000c46cb96765d063ef075b79dd3a99"
+    },
+    {
+      "id": "1036",
+      "name": "Billie Holiday",
+      "image": "https://i.scdn.co/image/4efa6b6871a0f672b78b3d16fd5a03c6cd212d58"
+    },
+    {
+      "id": "2449",
+      "name": "John Coltrane",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb4e85f2df0ebc051fcb317def"
+    },
+    {
+      "id": "5196129",
+      "name": "Kamasi Washington",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebefa4712d1cdf27fd2869a396"
+    },
+    {
+      "id": "1035779",
+      "name": "Gregory Porter",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb05a870004c9b9358e1499ba7"
+    }
+  ],
+  "Electronic": [
+    {
+      "id": "542",
+      "name": "David Guetta",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebf150017ca69c8793503c2d4f"
+    },
+    {
+      "id": "12178",
+      "name": "Calvin Harris",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb8ebba5e60113b48de8c11f6b"
+    },
+    {
+      "id": "7890702",
+      "name": "Marshmello",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebfa62d7b4d09a4ea9b4c5f05d"
+    },
+    {
+      "id": "293585",
+      "name": "Avicii",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebae07171f989fb39736674113"
+    },
+    {
+      "id": "3968561",
+      "name": "Martin Garrix",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebf5b8ee60f1f4ee3453aba40b"
+    },
+    {
+      "id": "525643",
+      "name": "Skrillex",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb09a2575e4cfa8af8bce207d1"
+    },
+    {
+      "id": "142381",
+      "name": "deadmau5",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb89ffabe57a25cedeca3309e7"
+    },
+    {
+      "id": "434",
+      "name": "Tiësto",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebf4973f7346a2f35e56b63d57"
+    },
+    {
+      "id": "1846",
+      "name": "Diplo",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebdf01727aa674ddefa777797a"
+    },
+    {
+      "id": "1198612",
+      "name": "Zedd",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebeefa05f0b8fcafd4beb19d31"
+    }
+  ],
+  "Indie": [
+    {
+      "id": "1182",
+      "name": "Arctic Monkeys",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb7da39dea0a72f581535fb11f"
+    },
+    {
+      "id": "1424821",
+      "name": "Lana Del Rey",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebb99cacf8acd5378206767261"
+    },
+    {
+      "id": "134790",
+      "name": "Tame Impala",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebe412a782245eb20d9626c601"
+    },
+    {
+      "id": "11573699",
+      "name": "Clairo",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb4804c4a44c85afea1a72d1bd"
+    },
+    {
+      "id": "78668",
+      "name": "Bon Iver",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebfa1d9471f2a10a3a5da1a646"
+    },
+    {
+      "id": "1619572",
+      "name": "Mac DeMarco",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebc9aca5b6d4c528caf75e8a1d"
+    },
+    {
+      "id": "14226477",
+      "name": "girl in red",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb1b15c2ad299fdcf864a09742"
+    },
+    {
+      "id": "12289196",
+      "name": "Wallows",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebfde4e7d59f6d8868e2ffdaf5"
+    },
+    {
+      "id": "11361878",
+      "name": "Rex Orange County",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb901ccc452604c427ef5f202f"
+    },
+    {
+      "id": "1058631",
+      "name": "Phoebe Bridgers",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb6e2d4ab2b84463aa4c349311"
+    }
+  ],
+  "Country": [
+    {
+      "id": "7188840",
+      "name": "Morgan Wallen",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb47de0bbc22f08b5ebe14bd6e"
+    },
+    {
+      "id": "9626504",
+      "name": "Luke Combs",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb147f54ed9d9d5f98efdfddd2"
+    },
+    {
+      "id": "2021921",
+      "name": "Thomas Rhett",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebdaf1894b7edbfe3376d397d9"
+    },
+    {
+      "id": "405",
+      "name": "Johnny Cash",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb94a8326675bfcafb20f0a235"
+    },
+    {
+      "id": "8741",
+      "name": "Dolly Parton",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb7fbd42b2f8ddebe1a817c53a"
+    },
+    {
+      "id": "4388",
+      "name": "Carrie Underwood",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebd045f0bbfc6ca6d1986161b8"
+    },
+    {
+      "id": "71855892",
+      "name": "Zach Bryan",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebc742fbc057bdbc64834a6cdc"
+    },
+    {
+      "id": "613934",
+      "name": "Jelly Roll",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb27901c1c025fa90f5dc007ef"
+    },
+    {
+      "id": "242132",
+      "name": "Luke Bryan",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb09d00e2d4bc8555c68388b95"
+    },
+    {
+      "id": "399990",
+      "name": "Kacey Musgraves",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb81a4837fda8c9e356bfb6252"
+    }
+  ],
+  "Metal": [
+    {
+      "id": "119",
+      "name": "Metallica",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb69ca98dd3083f1082d740e44"
+    },
+    {
+      "id": "117",
+      "name": "Slipknot",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebd0cdb283a7384a0edb665182"
+    },
+    {
+      "id": "458",
+      "name": "System Of A Down",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb60063d3451ade8f9fab397c2"
+    },
+    {
+      "id": "931",
+      "name": "Iron Maiden",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebf9978ad4808f6f2723124d19"
+    },
+    {
+      "id": "647",
+      "name": "Black Sabbath",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb9c0091ef46a07ceaae262df7"
+    },
+    {
+      "id": "689",
+      "name": "TOOL",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb13f5472b709101616c87cba3"
+    },
+    {
+      "id": "3487",
+      "name": "Megadeth",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebd5233fdc8cad84de5b366f1b"
+    },
+    {
+      "id": "533",
+      "name": "Judas Priest",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb4b3cfc24737acb15e73e8bd6"
+    },
+    {
+      "id": "3048",
+      "name": "Slayer",
+      "image": "https://i.scdn.co/image/8c81130db7b5f933412c4906c30327817f1e1b43"
+    },
+    {
+      "id": "406",
+      "name": "Avenged Sevenfold",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb54f5bda8d8f4aceb5c3b3901"
+    }
+  ],
+  "Reggae": [
+    {
+      "id": "719",
+      "name": "Bob Marley & The Wailers",
+      "image": "https://i.scdn.co/image/b5aae2067db80f694a980e596e7f49618c1206c9"
+    },
+    {
+      "id": "2326",
+      "name": "Peter Tosh",
+      "image": "https://i.scdn.co/image/c935305719f26d05c9d9b51b5b838d5448b44a27"
+    },
+    {
+      "id": "2425",
+      "name": "Jimmy Cliff",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb11bdad2b191ac35053d34bd2"
+    },
+    {
+      "id": "5871",
+      "name": "Toots & The Maytals",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb346451ca43eb84f810f13b96"
+    },
+    {
+      "id": "461",
+      "name": "Shaggy",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb2c67fdc2e3dfc796fc689c5c"
+    },
+    {
+      "id": "88",
+      "name": "Sean Paul",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb60c3e9abe7327c0097738f22"
+    },
+    {
+      "id": "254",
+      "name": "Damian Marley",
+      "image": "https://i.scdn.co/image/ab6772690000dd22297e4428eb2a582e0b0c0ebc"
+    },
+    {
+      "id": "5344",
+      "name": "Inner Circle",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb0ec60bb44bb36a4bc5beb3a0"
+    },
+    {
+      "id": "15362",
+      "name": "Collie Buddz",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb6799b9674066738256ee19f3"
+    },
+    {
+      "id": "13442",
+      "name": "Sean Kingston",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebee205e5029a04bd0460e16e4"
+    }
+  ],
+  "Folk": [
+    {
+      "id": "808",
+      "name": "Bob Dylan",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb791742524609864273747ef5"
+    },
+    {
+      "id": "384236",
+      "name": "Ed Sheeran",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebd55c95ad400aed87da52daec"
+    },
+    {
+      "id": "1379",
+      "name": "Neil Young",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebbae8276dffd864ebac759b76"
+    },
+    {
+      "id": "169",
+      "name": "Fleetwood Mac",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebc8752dd511cda8c31e9daee8"
+    },
+    {
+      "id": "2707",
+      "name": "Simon & Garfunkel",
+      "image": "https://i.scdn.co/image/afde2fdd14f8c8ca23393f257e3a369a234a24b6"
+    },
+    {
+      "id": "288092",
+      "name": "Mumford & Sons",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb00fe341805b27976b4302be0"
+    },
+    {
+      "id": "793825",
+      "name": "The Lumineers",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb0f882273183345499155d6ed"
+    },
+    {
+      "id": "5062414",
+      "name": "Hozier",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebad85a585103dfc2f3439119a"
+    },
+    {
+      "id": "4768525",
+      "name": "Vance Joy",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb4be87c6d504aa62024a87f48"
+    },
+    {
+      "id": "405",
+      "name": "Johnny Cash",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb94a8326675bfcafb20f0a235"
+    }
+  ],
+  "Soul": [
+    {
+      "id": "2059",
+      "name": "Aretha Franklin",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebf12270128127ba170f90097d"
+    },
+    {
+      "id": "166",
+      "name": "Stevie Wonder",
+      "image": "https://i.scdn.co/image/c59faacbed7aa770266bad048660810eca204108"
+    },
+    {
+      "id": "1154",
+      "name": "Marvin Gaye",
+      "image": "https://i.scdn.co/image/cf79bd3e5c787e2ec152eeb1ea5538b0d4cf1434"
+    },
+    {
+      "id": "2945",
+      "name": "Otis Redding",
+      "image": "https://i.scdn.co/image/4ad89c805aff0fb76b01b6b62b39e21fcd8943c3"
+    },
+    {
+      "id": "1622",
+      "name": "James Brown",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb158342aa8bb8a192c778f2a5"
+    },
+    {
+      "id": "900",
+      "name": "Sam Cooke",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb41aaa3a05d2ddba59454273e"
+    },
+    {
+      "id": "2369",
+      "name": "Al Green",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebd32cc8d4564f096a5486180b"
+    },
+    {
+      "id": "1342",
+      "name": "Ray Charles",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb6fc460f10177fa38af69b8bf"
+    },
+    {
+      "id": "744",
+      "name": "Nina Simone",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb136c51c848c26a6cce7f9e56"
+    },
+    {
+      "id": "2027",
+      "name": "Curtis Mayfield",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebeea0f2f51d7969bbb4000f92"
+    }
+  ],
+  "Punk": [
+    {
+      "id": "52",
+      "name": "Green Day",
+      "image": "https://cdn-images.dzcdn.net/images/artist/690381cc69a21802b5d95b0460afb6a3/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "409",
+      "name": "blink-182",
+      "image": "https://cdn-images.dzcdn.net/images/artist/3c60337b3a7cf8d3740bcea4c277f4e1/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "882",
+      "name": "The Offspring",
+      "image": "https://cdn-images.dzcdn.net/images/artist/cb39bd249507f7f66782834195be99de/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "599",
+      "name": "My Chemical Romance",
+      "image": "https://cdn-images.dzcdn.net/images/artist/8c78e78c01bbdc0c80fb4556c762d3bb/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "2",
+      "name": "The Clash",
+      "image": "https://cdn-images.dzcdn.net/images/artist/82a5fe6ba783cf618d5394ae0b8129b9/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "1725",
+      "name": "Ramones",
+      "image": "https://cdn-images.dzcdn.net/images/artist/566dc9dd5d0a8f4a834db3cf5d39a2fb/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "459",
+      "name": "Sum 41",
+      "image": "https://cdn-images.dzcdn.net/images/artist/4e050809d936853e333deb5331dbc476/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "10977",
+      "name": "Paramore",
+      "image": "https://cdn-images.dzcdn.net/images/artist/60dc1956a36a5e552384b4a32b0cbf9b/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "3299",
+      "name": "Sex Pistols",
+      "image": "https://cdn-images.dzcdn.net/images/artist/b36d5dc36967b6bfa335499330baca6a/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "936",
+      "name": "Bad Religion",
+      "image": "https://cdn-images.dzcdn.net/images/artist/9f37e85b1fcbcb40c57c6a35d40cfe98/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "3566",
+      "name": "Rise Against",
+      "image": "https://cdn-images.dzcdn.net/images/artist/aaded9492c2aa69f5d055487a67ccc11/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "4611",
+      "name": "Dropkick Murphys",
+      "image": "https://cdn-images.dzcdn.net/images/artist/d0f16c07cb5bc9a8a29ac68b38632b3f/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "957",
+      "name": "Misfits",
+      "image": "https://cdn-images.dzcdn.net/images/artist/c645717a690c6978eb817dd761192b36/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "2238",
+      "name": "Pennywise",
+      "image": "https://cdn-images.dzcdn.net/images/artist/d069f1488ae9cc2394c4890bed620dfa/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "1285",
+      "name": "The Used",
+      "image": "https://cdn-images.dzcdn.net/images/artist/8246674fa6bde7502ee14eb5522ea1db/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "2130",
+      "name": "AFI",
+      "image": "https://cdn-images.dzcdn.net/images/artist/7bfd6354ed438a7c770d7b2f4a48f4ab/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "2129",
+      "name": "Social Distortion",
+      "image": "https://cdn-images.dzcdn.net/images/artist/5cb88c61c67cbd0e6e24c9917cef462c/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "4338",
+      "name": "Underoath",
+      "image": "https://cdn-images.dzcdn.net/images/artist/62af962d6a8e28e7a4feaa72f7be36bb/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "941",
+      "name": "NOFX",
+      "image": "https://cdn-images.dzcdn.net/images/artist/2b7fdd20aa9ea0b9b574f288af485bff/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "3036",
+      "name": "Anti-Flag",
+      "image": "https://cdn-images.dzcdn.net/images/artist/d610f36c14edc05df0ecbd8de7e3be1a/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "2073",
+      "name": "Me First and the Gimme Gimmes",
+      "image": "https://cdn-images.dzcdn.net/images/artist/fdf53a19a3fc470b8ff015357ee862ce/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "170145",
+      "name": "Four Year Strong",
+      "image": "https://cdn-images.dzcdn.net/images/artist/e2532effb401877eeef620e5e79cd55a/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "5324",
+      "name": "Senses Fail",
+      "image": "https://cdn-images.dzcdn.net/images/artist/23e1b47f3d70ee8683a1730250aa7285/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "81218",
+      "name": "The Story So Far",
+      "image": "https://cdn-images.dzcdn.net/images/artist/59824357aab999d9607b9e61eb0dbca4/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "5550977",
+      "name": "Knuckle Puck",
+      "image": "https://cdn-images.dzcdn.net/images/artist/49295c5d89e9d4756835e28cf96114de/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "358940",
+      "name": "The Wonder Years",
+      "image": "https://cdn-images.dzcdn.net/images/artist/4d8cc7b99b1ef262e402fc77f65d89dc/500x500-000000-80-0-0.jpg"
+    }
+  ],
+  "Blues": [
+    {
+      "id": "3614",
+      "name": "B.B. King",
+      "image": "https://i.scdn.co/image/ffb3ff26238fe635a230bb0feb59dd0a5b209b6f"
+    },
+    {
+      "id": "5414",
+      "name": "Muddy Waters",
+      "image": "https://i.scdn.co/image/b4ccc4c928c953fbe755c88c4774df70db977a5c"
+    },
+    {
+      "id": "192",
+      "name": "Eric Clapton",
+      "image": "https://i.scdn.co/image/ab6772690000c46ca60e8f215103f6841d8a83f0"
+    },
+    {
+      "id": "12297",
+      "name": "Stevie Ray Vaughan",
+      "image": "https://i.scdn.co/image/1de60c936683320769a1bfb6fba7f75902859085"
+    },
+    {
+      "id": "8680",
+      "name": "Buddy Guy",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb0e5d3c1e98c2c1c659f34748"
+    },
+    {
+      "id": "1159",
+      "name": "John Lee Hooker",
+      "image": "https://i.scdn.co/image/6bcff0a9ed464621c433fb5d369c2164ebd3d2d0"
+    },
+    {
+      "id": "74408",
+      "name": "Robert Cray",
+      "image": "https://i.scdn.co/image/59fb19f67510dff8f8ff9337fc6a0b484a996546"
+    },
+    {
+      "id": "4781",
+      "name": "Joe Bonamassa",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebc3c63b0298a7db23423685ae"
+    },
+    {
+      "id": "69959",
+      "name": "Keb' Mo'",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebfcae0c6b72c4dc3a7f9d464a"
+    },
+    {
+      "id": "11920445",
+      "name": "Christone \"Kingfish\" Ingram",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebdb4373bbc43fd7a978a43b7e"
+    }
+  ],
+  "Alternative": [
+    {
+      "id": "399",
+      "name": "Radiohead",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb4104fbd80f1f795728abbd59"
+    },
+    {
+      "id": "14",
+      "name": "Gorillaz",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebdd5b57b40cf2aaeccd07835e"
+    },
+    {
+      "id": "92",
+      "name": "Linkin Park",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb527d95dabbe8b8b527e8136f"
+    },
+    {
+      "id": "193331",
+      "name": "The Smashing Pumpkins",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb2897dd777bbd8e3f23e49c99"
+    },
+    {
+      "id": "418",
+      "name": "Weezer",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebd0d06f3b5f3cb05fc657f12c"
+    },
+    {
+      "id": "927",
+      "name": "Oasis",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebb4ddbc39706ef0f2ae0f7c9b"
+    },
+    {
+      "id": "743",
+      "name": "Blur",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb00620d736644d2359ce99430"
+    },
+    {
+      "id": "569",
+      "name": "The Strokes",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb98856eea770468af6dd999d9"
+    },
+    {
+      "id": "705",
+      "name": "Muse",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebccb215d769112ec422a59ce6"
+    },
+    {
+      "id": "458",
+      "name": "System Of A Down",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb60063d3451ade8f9fab397c2"
+    }
+  ],
+  "Dance": [
+    {
+      "id": "8706544",
+      "name": "Dua Lipa",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb0c68f6c95232e716f0abee8d"
+    },
+    {
+      "id": "12178",
+      "name": "Calvin Harris",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb8ebba5e60113b48de8c11f6b"
+    },
+    {
+      "id": "542",
+      "name": "David Guetta",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebf150017ca69c8793503c2d4f"
+    },
+    {
+      "id": "7890702",
+      "name": "Marshmello",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebfa62d7b4d09a4ea9b4c5f05d"
+    },
+    {
+      "id": "4104927",
+      "name": "The Chainsmokers",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb4567279fac84a0375c3d819b"
+    },
+    {
+      "id": "293585",
+      "name": "Avicii",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebae07171f989fb39736674113"
+    },
+    {
+      "id": "4768753",
+      "name": "Kygo",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebe5ea1aa1404629c12ad86658"
+    },
+    {
+      "id": "1846",
+      "name": "Diplo",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebdf01727aa674ddefa777797a"
+    },
+    {
+      "id": "434",
+      "name": "Tiësto",
+      "image": "https://i.scdn.co/image/ab6761610000e5ebf4973f7346a2f35e56b63d57"
+    },
+    {
+      "id": "482758",
+      "name": "DJ Snake",
+      "image": "https://i.scdn.co/image/ab6761610000e5eb175df1a8848d8ff67c6d5600"
+    }
+  ],
+  "Lo-Fi": [
+    {
+      "id": "1978",
+      "name": "Nujabes",
+      "image": "https://cdn-images.dzcdn.net/images/artist/66061639b73edb7a01e8de7a1990eaa2/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "1339843",
+      "name": "DJ Okawari",
+      "image": "https://cdn-images.dzcdn.net/images/artist/ba9926d6b31723757f9fc0405db20b6e/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "63750",
+      "name": "Tycho",
+      "image": "https://cdn-images.dzcdn.net/images/artist/1c2b0b224f7fcef7eec344776911e501/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "11424216",
+      "name": "Jinsang",
+      "image": "https://cdn-images.dzcdn.net/images/artist/b26e1ae3fc26033e9c0adfd35e8f4128/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "119539812",
+      "name": "Idealism",
+      "image": "https://cdn-images.dzcdn.net/images/artist/6deb1f9b27a1345ca8774e75b6ce5673/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "118995542",
+      "name": "Philanthrope",
+      "image": "https://cdn-images.dzcdn.net/images/artist/3be886c51ee17492c64dc7099912f673/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "5351322",
+      "name": "Saib",
+      "image": "https://cdn-images.dzcdn.net/images/artist/42834b8c77870479b633fd544dca2e06/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "115223292",
+      "name": "Kupla",
+      "image": "https://cdn-images.dzcdn.net/images/artist/d5fa95c709e74e60bd0e6d3ff82991a9/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "10161146",
+      "name": "tomppabeats",
+      "image": "https://cdn-images.dzcdn.net/images/artist/c4df79b02e90246a7e317fb91323e0a5/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "10210028",
+      "name": "SwuM",
+      "image": "https://cdn-images.dzcdn.net/images/artist/8464d2f0bc5dcbdab310a3fff8b57b06/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "1328310",
+      "name": "Ketsa",
+      "image": "https://cdn-images.dzcdn.net/images/artist/8d8e4f6bf20fe06c49a86b446894d017/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "156679942",
+      "name": "L'indécis",
+      "image": "https://cdn-images.dzcdn.net/images/artist/da04485c669d4682c7c9048f8dc2ed2f/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "304311031",
+      "name": "LO FI GIRL",
+      "image": "https://cdn-images.dzcdn.net/images/artist/f0056fb7852732d80cc027527f598d2b/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "110336752",
+      "name": "Chill Hop",
+      "image": "https://cdn-images.dzcdn.net/images/artist/8ec5f60ad72812d36371aeb74b3fe4fa/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "4452092",
+      "name": "KAYTRANADA",
+      "image": "https://cdn-images.dzcdn.net/images/artist/419700a883e298d30cfbada1fabda5a1/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "6006756",
+      "name": "Tom Misch",
+      "image": "https://cdn-images.dzcdn.net/images/artist/fa4ef37016d821bcb5207f8dcaad0b7a/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "375308",
+      "name": "Emancipator",
+      "image": "https://cdn-images.dzcdn.net/images/artist/f141ae1f070f14ea9a74dcc411adebdf/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "13463103",
+      "name": "Bonobo",
+      "image": "https://cdn-images.dzcdn.net/images/artist/ceb51b6de1f57f093cc569ec8127646d/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "9427",
+      "name": "Shing02",
+      "image": "https://cdn-images.dzcdn.net/images/artist/16f05672f68439866b735fea18535bc3/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "6762547",
+      "name": "Uyama Hiroto",
+      "image": "https://cdn-images.dzcdn.net/images/artist/55ddead1abd10eb046f94c782b1c5a8d/500x500-000000-80-0-0.jpg"
+    }
+  ],
+  "Anime": [
+    {
+      "id": "69128312",
+      "name": "Eve",
+      "image": "https://cdn-images.dzcdn.net/images/artist/d338715a1c099cecc59363cd8c68ae3d/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "108153772",
+      "name": "YOASOBI",
+      "image": "https://cdn-images.dzcdn.net/images/artist/2cbfaf626a591e162bfcc2b4b0214217/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "5289039",
+      "name": "Kenshi Yonezu",
+      "image": "https://cdn-images.dzcdn.net/images/artist/29288251d9b8a8bd9c8497fb7b4fbcec/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "8623006",
+      "name": "Aimer",
+      "image": "https://cdn-images.dzcdn.net/images/artist/60df0d62b87e18b02ee6fabc50d129f5/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "5797990",
+      "name": "MAN WITH A MISSION",
+      "image": "https://cdn-images.dzcdn.net/images/artist/3c3891233481dfa4865883962fc91763/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "7579730",
+      "name": "OFFICIAL HIGE DANDISM",
+      "image": "https://cdn-images.dzcdn.net/images/artist/36eea2ae92ad5939cc0cedbf448ad6c9/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "12944623",
+      "name": "King Gnu",
+      "image": "https://cdn-images.dzcdn.net/images/artist/eab5445c9e15a77ed8a92fac13546d86/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "469713",
+      "name": "ONE OK ROCK",
+      "image": "https://cdn-images.dzcdn.net/images/artist/f2e7c7631f2476c8e5d0987810eff4ea/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "121146382",
+      "name": "Ado",
+      "image": "https://cdn-images.dzcdn.net/images/artist/858e14d0f8ee062253851aaf3b31daef/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "8152202",
+      "name": "Mrs. GREEN APPLE",
+      "image": "https://cdn-images.dzcdn.net/images/artist/1f2072439a1061130981305e6849cf9e/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "355686422",
+      "name": "Vaundy",
+      "image": "https://cdn-images.dzcdn.net/images/artist/d41d8cd98f00b204e9800998ecf8427e/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "248809502",
+      "name": "Hikaru Utada",
+      "image": "https://cdn-images.dzcdn.net/images/artist/231960b115053c59c8e02501fc051de7/500x500-000000-80-0-0.jpg"
+    }
+  ],
+  "Gaming": [
+    {
+      "id": "4718868",
+      "name": "C418",
+      "image": "https://cdn-images.dzcdn.net/images/artist/9b76ec3fccb7b3831a9cccc2cae5036e/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "10468691",
+      "name": "Toby Fox",
+      "image": "https://cdn-images.dzcdn.net/images/artist/fc346b96e27af180122e59d2517de00a/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "3855071",
+      "name": "Mick Gordon",
+      "image": "https://cdn-images.dzcdn.net/images/artist/49c6ec399aea810fd58db9678c622207/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "5870020",
+      "name": "Darren Korb",
+      "image": "https://cdn-images.dzcdn.net/images/artist/0c95c7129f97b0068c5a848be03259f5/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "280497",
+      "name": "Nobuo Uematsu",
+      "image": "https://cdn-images.dzcdn.net/images/artist/25c14d9bdc82eb8bbc60078284de811e/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "4651125",
+      "name": "Koji Kondo",
+      "image": "https://cdn-images.dzcdn.net/images/artist/b28cfbb060c71e2d8f7bc64ed11de60f/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "15902",
+      "name": "Jesper Kyd",
+      "image": "https://cdn-images.dzcdn.net/images/artist/8d6fbf355a8afcab191352fbc0192e2e/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "5454486",
+      "name": "Gareth Coker",
+      "image": "https://cdn-images.dzcdn.net/images/artist/f192318edf5c03014f0249bafe944e79/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "7402526",
+      "name": "League of Legends",
+      "image": "https://cdn-images.dzcdn.net/images/artist/21e53b8e8285f84f60601d895c39c900/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "5833250",
+      "name": "Pentakill",
+      "image": "https://cdn-images.dzcdn.net/images/artist/bbdba0d6a485ccd58e315bac4b90243b/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "3972541",
+      "name": "Two Steps from Hell",
+      "image": "https://cdn-images.dzcdn.net/images/artist/89c148d9ed7ea8302560e7b98f99a23b/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "416239",
+      "name": "Imagine Dragons",
+      "image": "https://cdn-images.dzcdn.net/images/artist/1ba025c23cae3dee14b51152990285fc/500x500-000000-80-0-0.jpg"
+    }
+  ],
+  "Classical": [
+    {
+      "id": "6144",
+      "name": "Ludwig van Beethoven",
+      "image": "https://image-cdn-ak.spotifycdn.com/image/ab67616100005174a636b0b244253f602a629796"
+    },
+    {
+      "id": "1900",
+      "name": "Johann Sebastian Bach",
+      "image": "https://i.scdn.co/image/438b280a22e63f994fd39feb031683fb861a31cb"
+    },
+    {
+      "id": "5695",
+      "name": "Wolfgang Amadeus Mozart",
+      "image": "https://image-cdn-ak.spotifycdn.com/image/ab676161000051747fa9108c6dadb8c3ec21da88"
+    },
+    {
+      "id": "8473",
+      "name": "Frédéric Chopin",
+      "image": "https://image-cdn-fa.spotifycdn.com/image/ab67616100005174e55372097569b7b56b439365"
+    },
+    {
+      "id": "309998",
+      "name": "Pyotr Ilyich Tchaikovsky",
+      "image": "https://i.scdn.co/image/0fc4439f1b6b478408292baa38bd44d9268e4b33"
+    },
+    {
+      "id": "5176",
+      "name": "Claude Debussy",
+      "image": "https://i.scdn.co/image/155965c396369f20273bc6ba6a14f4185ffad805"
+    },
+    {
+      "id": "4081",
+      "name": "Antonio Vivaldi",
+      "image": "https://i.scdn.co/image/30702c2e565f3c36fcc65673cf2f19fe852ca7c0"
+    },
+    {
+      "id": "7228",
+      "name": "Franz Schubert",
+      "image": "https://i.scdn.co/image/168779da16912766ecdea068c5e53c946e5db485"
+    },
+    {
+      "id": "191347",
+      "name": "Sergei Rachmaninoff",
+      "image": "https://i.scdn.co/image/b8330117c874452738ae70abd12561af07c9867f"
+    },
+    {
+      "id": "10718",
+      "name": "Johann Strauss II",
+      "image": "https://i.scdn.co/image/27f8feeab318eecdb0be9e77470905a4e9b890bf"
+    }
+  ],
+  "Ambient": [
+    {
+      "id": "2042",
+      "name": "Brian Eno",
+      "image": "https://cdn-images.dzcdn.net/images/artist/206fb71e27938b4e5d40766de12b9f95/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "1098",
+      "name": "Boards of Canada",
+      "image": "https://cdn-images.dzcdn.net/images/artist/5c9084d915f3e3b1abeceb839f6a7633/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "1417",
+      "name": "Sigur Rós",
+      "image": "https://cdn-images.dzcdn.net/images/artist/183b360fc18532949fb9ec16b2bee57c/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "1234",
+      "name": "Explosions in the Sky",
+      "image": "https://cdn-images.dzcdn.net/images/artist/67d724fa4a96fa9aca639c1b519edb7a/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "60857",
+      "name": "Stars of the Lid",
+      "image": "https://cdn-images.dzcdn.net/images/artist/2585d114231c0955e48c0f7fd63f1b45/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "59110",
+      "name": "Tim Hecker",
+      "image": "https://cdn-images.dzcdn.net/images/artist/8174771a836baf3cfe1dcd9f30c16689/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "14309003",
+      "name": "Biosphere",
+      "image": "https://cdn-images.dzcdn.net/images/artist/d41d8cd98f00b204e9800998ecf8427e/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "500371",
+      "name": "Kashiwa Daisuke",
+      "image": "https://cdn-images.dzcdn.net/images/artist/59dbd90b951dfc6e2f77556ea7b87004/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "13480371",
+      "name": "Hiroshi Yoshimura",
+      "image": "https://cdn-images.dzcdn.net/images/artist/6daea505e1fa2d0188ae2c0b251e1ea1/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "580",
+      "name": "Aphex Twin",
+      "image": "https://cdn-images.dzcdn.net/images/artist/22545b72e8b8eecd902824d600badcf3/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "1353649",
+      "name": "A Winged Victory for the Sullen",
+      "image": "https://cdn-images.dzcdn.net/images/artist/384e7c60751003d4c7b4c4b48e730b4a/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "60267",
+      "name": "Hammock",
+      "image": "https://cdn-images.dzcdn.net/images/artist/5effaaf6ab1d022eeef5b7f0b4962fa4/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "94102672",
+      "name": "Mogwai",
+      "image": "https://cdn-images.dzcdn.net/images/artist/d41d8cd98f00b204e9800998ecf8427e/500x500-000000-80-0-0.jpg"
+    },
+    {
+      "id": "288486801",
+      "name": "Hélio",
+      "image": "https://cdn-images.dzcdn.net/images/artist/086558d33d7f9c6c509baa5f3ac852ee/500x500-000000-80-0-0.jpg"
+    }
+  ]
+}
