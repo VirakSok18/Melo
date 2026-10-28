@@ -3386,6 +3386,19 @@ class GenerateService {
         );
       }
 
+      if (curationResult['success'] != true && poolToCurate.isNotEmpty) {
+        print('[Generate] External AI unavailable. Using algorithmic curation on candidate pool (${poolToCurate.length} tracks)...');
+        curationResult = {
+          'success': true,
+          'selected_indices': List<int>.generate(
+            poolToCurate.length < size ? poolToCurate.length : size,
+            (i) => i,
+          ),
+          'title': _generateFallbackTitle(mood),
+          'description': 'A curated playlist inspired by "$mood"',
+        };
+      }
+
       if (curationResult['success'] == true) {
         final selectedIndices =
             curationResult['selected_indices'] as List<int>? ?? [];
@@ -3745,6 +3758,20 @@ class GenerateService {
     }
 
     if (result['success'] != true) {
+      print('[Generate] Direct AI generation unavailable. Fetching popular trending tracks as resilient fallback...');
+      final fallbackTracks = await _fetchFallbackChartTracks(size);
+      if (fallbackTracks.isNotEmpty) {
+        return GeneratedPlaylist(
+          success: true,
+          mood: mood,
+          title: _generateFallbackTitle(mood),
+          description: 'A curated mix inspired by "$mood"',
+          size: fallbackTracks.length,
+          source: 'resilient_catalog_fallback',
+          songs: fallbackTracks,
+        );
+      }
+
       return GeneratedPlaylist(
         success: false,
         mood: mood,
@@ -4325,4 +4352,52 @@ class GenerateService {
       songs: tracks,
     );
   }
+
+  static String _generateFallbackTitle(String mood) {
+    final clean = mood
+        .replaceAll(
+            RegExp(r'(playlist|songs?|make\s*a|give\s*me|plz|please|for\s*me|ចម្រៀង|ផ្លេលីស)',
+                caseSensitive: false),
+            '')
+        .trim();
+    if (clean.isEmpty) return 'My Vibe Playlist';
+    final words = clean.split(RegExp(r'\s+'));
+    final capitalized = words.map((w) {
+      if (w.isEmpty) return '';
+      return w[0].toUpperCase() + (w.length > 1 ? w.substring(1) : '');
+    }).join(' ');
+    return '$capitalized Mix';
+  }
+
+  static Future<List<Map<String, dynamic>>> _fetchFallbackChartTracks(int size) async {
+    try {
+      final resp = await http.get(
+        Uri.parse('$_deezerApi/chart/0/tracks?limit=' + (size + 10).toString()),
+        headers: {'Accept': 'application/json'},
+      ).timeout(const Duration(seconds: 4));
+      if (resp.statusCode == 200) {
+        final data = jsonDecode(resp.body);
+        final list = (data['data'] as List? ?? [])
+            .whereType<Map<String, dynamic>>()
+            .where((t) => t['readable'] != false)
+            .map((r) => SearchResult.fromDeezerTrack(r))
+            .take(size)
+            .map((t) => {
+                  'title': t.title,
+                  'artist': t.artist,
+                  'artistId': t.artistId,
+                  'artistImage': t.artistImage,
+                  'image': t.image,
+                  'duration': t.duration,
+                  'deezerId': t.id,
+                  'previewUrl': t.previewUrl,
+                  'source': 'chart_fallback',
+                })
+            .toList();
+        return list;
+      }
+    } catch (_) {}
+    return [];
+  }
+
 }
