@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'artist_follow_service.dart';
 import 'artist_service.dart';
@@ -2317,15 +2318,10 @@ class GenerateService {
 
     if (needsTaste && user != null) {
       try {
-        final profile = await Supabase.instance.client
-            .from('profiles')
-            .select('favorite_genres')
-            .eq('id', user.id)
-            .maybeSingle()
-            .timeout(const Duration(seconds: 4));
-        if (profile != null) {
-          final rawGenres =
-              (profile['favorite_genres'] as List<dynamic>?) ?? [];
+        final prefs = await SharedPreferences.getInstance();
+        final cached = prefs.getString('profile_favorite_genres');
+        if (cached != null && cached.isNotEmpty) {
+          final rawGenres = (jsonDecode(cached) as List<dynamic>?) ?? [];
           for (final g in rawGenres) {
             final str = g?.toString().trim() ?? '';
             if (str.isNotEmpty) profileGenresList.add(str);
@@ -2335,6 +2331,8 @@ class GenerateService {
                 'PREFERRED GENRES: ${profileGenresList.join(', ')}\n';
           }
         }
+      } catch (_) {}
+      try {
         final tasteRows = await Supabase.instance.client
             .from('user_taste_profiles')
             .select('recommend_more, recommend_less')

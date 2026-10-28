@@ -390,44 +390,51 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     try {
       final profile = await Supabase.instance.client
           .from('profiles')
-          .select('display_name, avatar_url, favorite_genres, favorite_artists')
+          .select('display_name, username, avatar_url')
           .eq('id', user.id)
-          .single()
-          .timeout(const Duration(seconds: 8));
+          .maybeSingle()
+          .timeout(const Duration(seconds: 4));
 
-      final genres = (profile['favorite_genres'] as List<dynamic>?)
-              ?.map((e) => e.toString())
-              .toList() ??
-          [];
+      final fetchedName = profile?['display_name']?.toString() ?? '';
+      final fetchedUser = profile?['username']?.toString() ?? '';
+      final fetchedAvatar = profile?['avatar_url']?.toString();
 
-      final rawArtists = (profile['favorite_artists'] as List<dynamic>?) ?? [];
-      final seenNames = <String>{};
-      final artists = rawArtists.where((a) {
-        final name = (a['name'] ?? '').toString().toLowerCase();
-        if (name.isEmpty || seenNames.contains(name)) return false;
-        seenNames.add(name);
-        return true;
-      }).toList();
+      final effectiveName = fetchedName.isNotEmpty
+          ? fetchedName
+          : (fetchedUser.isNotEmpty
+              ? fetchedUser
+              : (user.userMetadata?['display_name']?.toString() ??
+                  user.userMetadata?['full_name']?.toString() ??
+                  user.userMetadata?['name']?.toString() ??
+                  cachedName));
 
-      // Cache profile locally so the home header renders offline.
+      final effectiveAvatar = (fetchedAvatar != null && fetchedAvatar.isNotEmpty)
+          ? fetchedAvatar
+          : (user.userMetadata?['avatar_url']?.toString() ??
+              user.userMetadata?['picture']?.toString() ??
+              cachedAvatar);
+
       try {
-        await prefs.setString(
-            'profile_display_name', profile['display_name'] ?? '');
-        await prefs.setString(
-            'profile_avatar_url', profile['avatar_url'] ?? '');
-        await prefs.setString('profile_favorite_genres', jsonEncode(genres));
-        await prefs.setString('profile_favorite_artists', jsonEncode(artists));
+        if (effectiveName.isNotEmpty) {
+          await prefs.setString('profile_display_name', effectiveName);
+        }
+        if (effectiveAvatar != null && effectiveAvatar.isNotEmpty) {
+          await prefs.setString('profile_avatar_url', effectiveAvatar);
+        }
       } catch (e) {
         debugPrint('Profile cache save error: $e');
       }
 
+      final p = ProfileService();
+      if (effectiveName.isNotEmpty) p.displayName = effectiveName;
+      if (fetchedUser.isNotEmpty) p.username = fetchedUser;
+      if (effectiveAvatar != null && effectiveAvatar.isNotEmpty) p.avatarUrl = effectiveAvatar;
+
       if (mounted) {
         setState(() {
           _greeting = _getGreeting();
-          _displayName = profile['display_name'] ?? '';
-          _avatarUrl = profile['avatar_url'];
-          _userGenres = genres;
-          _favoriteArtists = artists;
+          if (effectiveName.isNotEmpty) _displayName = effectiveName;
+          if (effectiveAvatar != null && effectiveAvatar.isNotEmpty) _avatarUrl = effectiveAvatar;
         });
 
         // Check if migration is needed after both profile and follows are loaded

@@ -223,22 +223,15 @@ class NewReleasesService {
 
   static Future<List<String>> _getFavoriteGenres() async {
     try {
-      final user = Supabase.instance.client.auth.currentUser;
-      if (user == null) return [];
-      final profile = await Supabase.instance.client
-          .from('profiles')
-          .select('favorite_genres')
-          .eq('id', user.id)
-          .maybeSingle()
-          .timeout(const Duration(seconds: 8));
-      return (profile?['favorite_genres'] as List<dynamic>?)
-              ?.map((g) => g.toString())
-              .toList() ??
-          [];
-    } catch (e) {
-      print('[NewReleases] Failed to load favorite genres: $e');
-      return [];
-    }
+      final prefs = await SharedPreferences.getInstance();
+      final cached = prefs.getString('profile_favorite_genres');
+      if (cached != null && cached.isNotEmpty) {
+        return (jsonDecode(cached) as List<dynamic>)
+            .map((g) => g.toString())
+            .toList();
+      }
+    } catch (_) {}
+    return [];
   }
 
   // ------------------------------------------------------------------

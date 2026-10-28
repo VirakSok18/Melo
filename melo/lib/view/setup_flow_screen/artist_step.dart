@@ -1,10 +1,13 @@
 import '../../widgets/cached_image.dart';
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../services/artist_service.dart';
 import '../../services/artist_follow_service.dart';
+import '../../services/profile_service.dart';
 import '../../main.dart';
 import '../../widgets/skeleton_loader.dart';
 
@@ -332,6 +335,33 @@ class _ArtistStepState extends State<ArtistStep> {
           } catch (_) {}
         }
       }
+
+      // Save to local cache for instant zero-latency startup
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('profile_favorite_genres', jsonEncode(widget.selectedGenres.toList()));
+        await prefs.setString('profile_favorite_artists', jsonEncode(selectedArtists));
+        if (widget.displayName != null && widget.displayName!.isNotEmpty) {
+          await prefs.setString('profile_display_name', widget.displayName!);
+        }
+        if (avatarUrl != null && avatarUrl.isNotEmpty) {
+          await prefs.setString('profile_avatar_url', avatarUrl);
+        }
+      } catch (_) {}
+
+      // Seed singleton ProfileService immediately
+      final p = ProfileService();
+      if (widget.displayName != null && widget.displayName!.isNotEmpty) {
+        p.displayName = widget.displayName!;
+      }
+      if (widget.username != null && widget.username!.isNotEmpty) {
+        p.username = widget.username!;
+      }
+      if (avatarUrl != null && avatarUrl.isNotEmpty) {
+        p.avatarUrl = avatarUrl;
+      }
+      await p.saveToDisk();
+      p.notifyUpdate();
 
       // Seed the profile-complete cache so AuthGate goes straight to Home
       await AuthGate.markProfileComplete();

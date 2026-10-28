@@ -1069,16 +1069,13 @@ class VibeService {
       // User top genres from profile
       List<String> userGenres = [];
       try {
-        final profile = await Supabase.instance.client
-            .from('profiles')
-            .select('favorite_genres')
-            .eq('id', user.id)
-            .maybeSingle()
-            .timeout(const Duration(seconds: 6));
-        userGenres = (profile?['favorite_genres'] as List<dynamic>?)
-                ?.map((e) => e.toString())
-                .toList() ??
-            [];
+        final prefs = await SharedPreferences.getInstance();
+        final cached = prefs.getString('profile_favorite_genres');
+        if (cached != null && cached.isNotEmpty) {
+          userGenres = (jsonDecode(cached) as List<dynamic>)
+              .map((e) => e.toString())
+              .toList();
+        }
       } catch (e) {
         debugPrint('[Vibe] Profile favorite_genres fetch error: $e');
       }

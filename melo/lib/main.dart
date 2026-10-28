@@ -459,6 +459,7 @@ class _AuthGateState extends State<AuthGate> {
 
         if (isFullyCompleted) {
           await prefs.setBool(AuthGate._profileCacheKey, true);
+          unawaited(ProfileService().load(forceRefresh: true));
         } else if (profile != null) {
           // Only invalidate cache if we got a real non-null response confirming it was wiped
           await prefs.remove(AuthGate._profileCacheKey);
