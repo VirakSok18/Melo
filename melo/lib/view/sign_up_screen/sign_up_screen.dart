@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../services/auth_service.dart';
+import '../../services/api_service.dart';
 import '../sign_in_screen/sign_in_screen.dart';
 import '../../main.dart';
 import '../otp_screen/otp_screen.dart';
@@ -85,30 +86,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
     setState(() => _isLoading = true);
 
     try {
-      final authResponse = await AuthService().signUpWithEmail(
-        email: email,
-        password: password,
-      );
+      final res = await ApiService.sendOtp(email);
 
       if (!mounted) return;
 
-      if (authResponse.session != null) {
-        // Immediate login! (No email confirmation required)
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Account created successfully!'),
-            backgroundColor: Colors.green,
-          ),
-        );
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (_) => const AuthGate()),
-          (route) => false,
-        );
-      } else {
-        // Supabase sent verification OTP / confirmation email
+      if (res['success'] == true) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Verification code sent to $email!'),
+            content: Text(res['message'] ?? 'Verification code sent to $email!'),
             backgroundColor: Colors.green,
           ),
         );
@@ -121,11 +106,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
             ),
           ),
         );
+      } else {
+        _showError(res['message'] ?? 'Failed to send verification code');
       }
-    } on AuthException catch (e) {
-      _showError(e.message);
     } catch (e) {
-      _showError('Sign up failed. Please check your network and try again.');
+      _showError('Sign up failed: $e');
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }

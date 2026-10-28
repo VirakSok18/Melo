@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../../services/auth_service.dart';
+import '../../services/api_service.dart';
 import '../../main.dart';
 
 class OtpScreen extends StatefulWidget {
@@ -63,18 +63,47 @@ class _OtpScreenState extends State<OtpScreen> {
     setState(() => _isLoading = true);
 
     try {
-      final res = await AuthService().verifySignUpOtp(
-        email: widget.email,
-        token: code,
-      );
+      final verifyRes = await ApiService.verifyOtp(widget.email, code);
 
-      if (res.user != null && mounted) {
+      if (verifyRes['success'] != true) {
+        _showError(verifyRes['message'] ?? 'Invalid verification code');
+        return;
+      }
+
+      // Step 2: Account creation / sign in in Supabase
+      try {
+        final signUpRes = await Supabase.instance.client.auth.signUp(
+          email: widget.email,
+          password: widget.password,
+        );
+
+        if (signUpRes.user != null && mounted) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const AuthGate()),
+          );
+          return;
+        }
+      } catch (_) {
+        // If already created, sign in directly with password
+        await Supabase.instance.client.auth.signInWithPassword(
+          email: widget.email,
+          password: widget.password,
+        );
+        if (mounted) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const AuthGate()),
+          );
+          return;
+        }
+      }
+
+      if (mounted) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const AuthGate()),
         );
-      } else {
-        _showError('Verification failed. Please check your code.');
       }
     } on AuthException catch (e) {
       _showError(e.message);
@@ -89,19 +118,21 @@ class _OtpScreenState extends State<OtpScreen> {
     if (_resendSeconds > 0) return;
 
     try {
-      await AuthService().resendSignUpOtp(email: widget.email);
-      setState(() => _resendSeconds = 60);
-      _startResendTimer();
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Verification code sent!'),
-            backgroundColor: Colors.green,
-          ),
-        );
+      final res = await ApiService.sendOtp(widget.email);
+      if (res['success'] == true) {
+        setState(() => _resendSeconds = 60);
+        _startResendTimer();
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Verification code sent!'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
+      } else {
+        _showError(res['message'] ?? 'Failed to resend code');
       }
-    } on AuthException catch (e) {
-      _showError(e.message);
     } catch (e) {
       _showError('Failed to resend code');
     }
