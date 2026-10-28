@@ -2,11 +2,36 @@
   <img src="Logo.svg" alt="Melo Logo" width="100" />
 </p>
 
-# Melo — Intelligent Music Streaming & Social Audio Platform
+# Melo — Full-Stack AI Music Streaming & Social Audio Platform
 
-Personalized music streaming engineered for mood, taste, and real-time social listening. 
+Melo is a full-stack music streaming platform engineered for mood-based curation, real-time social listening, and high-fidelity adaptive audio streaming. 
 
-Melo offers a dual-mode architecture: a **Standalone Serverless Mobile App** (Flutter + Supabase) that runs out-of-the-box with zero backend hosting, and an optional **Spring Boot Enterprise Microservice Backend** (`SpringBackend/`) for high-throughput streaming proxies, Bakong KHQR payment processing, and external API normalization.
+The system is architected as a high-performance distributed platform pairing a cross-platform **Flutter Mobile Client** with an enterprise **Spring Boot (Java 21) Microservice Backend** and **Supabase Realtime PostgreSQL**.
+
+---
+
+## System Architecture
+
+```text
+                        ┌─────────────────────────────────────────┐
+                        │          Flutter Mobile Client          │
+                        │    (iOS / Android Native Audio Engine)  │
+                        └─────────────┬───────────────────────────┘
+                                      │
+                 ┌────────────────────┴────────────────────┐
+                 │ REST / Audio Streaming                  │ Supabase Realtime / RLS
+                 ▼                                         ▼
+  ┌───────────────────────────────┐        ┌───────────────────────────────┐
+  │     Spring Boot Microservice  │        │   Supabase Cloud Platform     │
+  │          (Java 21)            │        │  (PostgreSQL, GoTrue, Sync)   │
+  └──────────────┬────────────────┘        └───────────────────────────────┘
+                 │
+  ┌──────────────┼───────────────────────────────┬───────────────────────────────┐
+  ▼              ▼                               ▼                               ▼
+[ Deezer API ] [ Spotify Web API ]     [ Bakong KHQR Gateway ]       [ AI Engine ]
+Audio Stream   Catalog Discovery        Merchant QR Payments         Groq Llama 3.3
+& CDN Proxy    & Metadata Sync          & Signature Verification      Gemini & Tavily
+```
 
 ---
 
@@ -30,30 +55,34 @@ Melo offers a dual-mode architecture: a **Standalone Serverless Mobile App** (Fl
 
 ---
 
-## Key Features
+## Engineering Highlights & Capabilities
 
-- **AI Playlist Generator**: Natural language prompt deconstruction across mood, activity, and environment. Powered by Groq (Llama 3.3) and Google Gemini with live catalog search and Khmer speech-to-text normalization.
-- **Adaptive Music Identity**: Learns listening preferences from telemetry (completions, skips, replays) to build dynamic taste profiles and daily mixes.
-- **High-Fidelity Audio**: Multi-source adaptive audio streaming pipeline with intelligent background prefetching, fallback caching, and instant playback.
-- **Listen Together**: Synchronized multi-user playback over Supabase Realtime channels.
-- **Offline Playback**: Encrypted local caching of audio tracks and synchronized LRCLIB lyrics.
-- **Bakong KHQR Integration**: Native Cambodian national QR payment standard support via Spring Boot backend for merchant transactions.
+### 1. Spring Boot (Java 21) Microservice Backend (`SpringBackend/`)
+- **Multi-Source Audio Proxy & Decoding:** Engineered a low-latency audio streaming proxy (`DeezerStreamController`, `DeezerStreamService`) with async request streaming (`spring.mvc.async.request-timeout=600000`) to pipe high-bitrate audio directly to clients without memory buffering bottlenecks.
+- **AI Playlist Generation Engine:** Natural language prompt deconstruction across mood, energy, and acoustic profiles (`GenerateService`). Integrates Groq (Llama 3.3 70B), Google Gemini 2.5 Flash, and Tavily AI web search for real-time music discovery.
+- **Bakong KHQR Payment Integration:** Native integration with the National Bank of Cambodia (NBC) Bakong KHQR Open API (`BakongPaymentService`). Supports dynamic merchant QR generation, transaction polling, and cryptographic payment verification.
+- **API Defense & Performance:** Custom rate-limiting filter (`RateLimitFilter`) to prevent API abuse, in-memory stream caching, and multi-threaded background workers for catalog sync.
+- **Microservice Containerization:** Fully containerized with a production-ready multi-stage `Dockerfile` and configured for seamless deployment on Docker, Railway, or AWS.
+
+### 2. Flutter Mobile Application (`melo/`)
+- **Adaptive Audio Pipeline:** Built using `just_audio` and `just_audio_background` with native notification controls, lock-screen playback, and dynamic seekable waveform visualizations.
+- **Listen Together (Synchronized Playback):** Multi-user synchronized listening sessions powered by Supabase Realtime broadcast channels with latency compensation.
+- **Encrypted Offline Storage:** AES-encrypted local storage for downloaded tracks and synchronized LRCLIB timestamped lyrics.
+- **Adaptive Music Taste Engine:** Real-time client-side telemetry capturing completion rates, skips, and repeats to adapt user recommendations dynamically.
 
 ---
 
-## Architecture & Modes
+## Tech Stack
 
-Melo is designed to operate flexibly in two modes:
-
-### 1. Standalone / Frontend-First Mode (Current Mobile Release)
-- **Direct Supabase Integration:** Authentication, User Profiles, Liked Songs, Custom Playlists, and Realtime Listen-Together sync run directly against Supabase with PostgreSQL Row Level Security (RLS).
-- **Direct Catalog & AI:** Client directly reaches verified audio sources and Groq AI without requiring any self-hosted proxy server.
-- **Cost:** 100% Free hosting overhead for mobile distribution.
-
-### 2. Microservice Mode (Spring Boot Backend)
-- **Proxy & Audio Caching:** `SpringBackend` handles server-side streaming decoding (Deezer/Spotify/YouTube), rate limiting, and edge caching.
-- **Payment Verification:** Processes Bakong KHQR webhooks and verifies cryptographic payment signatures.
-- **Centralized Email & OTP:** Relays transactional email OTP verification.
+| Domain | Technologies |
+| :--- | :--- |
+| **Backend Framework** | Spring Boot 3.3, Java 21, Spring MVC, Spring Data, Maven |
+| **Mobile Client** | Flutter 3.27, Dart 3.6, Provider, Flutter Secure Storage |
+| **Audio Processing** | just_audio, just_audio_background, Custom Java Audio Stream Proxy |
+| **Database & Auth** | Supabase (PostgreSQL with Row Level Security), H2 Database (Dev) |
+| **AI Models & Search** | Groq (Llama 3.3 70B), Google Gemini 2.5 Flash, Tavily AI Search |
+| **Payment Gateway** | Bakong KHQR Open API (National Bank of Cambodia) |
+| **DevOps & Infra** | Docker, Railway, GitHub Actions, Vercel |
 
 ---
 
@@ -61,26 +90,27 @@ Melo is designed to operate flexibly in two modes:
 
 ```text
 Melo/
-├── melo/                         # Flutter Mobile Application (iOS & Android)
-│   ├── android/                  # Native Android configuration & build scripts
-│   ├── ios/                      # Native iOS configuration
+├── melo/                         # Flutter Mobile Application
+│   ├── android/                  # Android native project & manifest
+│   ├── ios/                      # iOS native runner & permissions
 │   ├── lib/
-│   │   ├── config/               # App configuration, theme, and API routing
-│   │   ├── services/             # Audio engines, Supabase client, and AI
-│   │   ├── view/                 # UI screens (Home, Player, Search, Profile)
-│   │   └── widgets/              # Shared audio widgets and animated visualizers
-│   └── supabase/                 # Idempotent PostgreSQL schemas & RLS policies
-├── SpringBackend/                # Spring Boot (Java 21) Microservice
+│   │   ├── config/               # API endpoints & theme configuration
+│   │   ├── services/             # Audio playback, cache & Supabase sync
+│   │   ├── view/                 # UI screens (Home, Player, Vibe, Library)
+│   │   └── widgets/              # Waveforms, dialogs, and controls
+│   └── supabase/                 # PostgreSQL schemas, functions & RLS policies
+├── SpringBackend/                # Spring Boot Microservice Backend
 │   ├── src/main/java/com/melo/
-│   │   ├── config/               # Spring Beans (Supabase, Bakong, Spotify, Groq)
-│   │   ├── controller/           # REST endpoints for search, stream & payments
-│   │   ├── service/              # Audio streaming proxy and AI generator logic
-│   │   └── security/             # Rate-limiting filter and security rules
-│   ├── src/main/resources/       # application.properties and seed catalogs
+│   │   ├── config/               # Service beans (Bakong, Groq, Deezer, Spotify)
+│   │   ├── controller/           # REST endpoints (Stream, Search, Payments, AI)
+│   │   ├── dto/                  # Request / Response transfer objects
+│   │   ├── service/              # Core business logic & stream decoders
+│   │   └── security/             # Rate-limiting filter and CORS policy
+│   ├── src/main/resources/       # application.properties and static seeds
 │   ├── Dockerfile                # Production container deployment definition
-│   └── pom.xml                   # Maven dependencies (Spring Boot 3, Lombok, etc.)
-├── screenshots/                  # Mobile UI showcase captures
-└── README.md                     # Monorepo documentation
+│   └── pom.xml                   # Maven project descriptor
+├── screenshots/                  # Mobile showcase screenshots
+└── README.md                     # Monorepo technical documentation
 ```
 
 ---
@@ -89,61 +119,27 @@ Melo/
 
 ### Prerequisites
 
-- **Flutter SDK**: 3.27 or higher
-- **Java JDK**: 21 or higher (for Spring Boot backend)
+- **Java JDK**: 21 or higher
 - **Maven**: 3.8+ (or use included `./mvnw`)
-- **Supabase Account**: Free PostgreSQL database
+- **Flutter SDK**: 3.27 or higher
+- **Supabase Account**: PostgreSQL instance
 
 ---
 
-### Part 1: Mobile App Setup (Flutter)
+### Step 1: Start the Spring Boot Backend
 
-1. **Navigate to the mobile app directory:**
-   ```bash
-   cd melo
-   ```
-
-2. **Configure Environment:**
-   Copy the example environment template:
-   ```bash
-   cp .env.example .env
-   ```
-   Provide your Supabase URL, Anon Key, and Groq/Gemini API keys.
-
-3. **Install Dependencies:**
-   ```bash
-   flutter pub get
-   ```
-
-4. **Run the Application:**
-   ```bash
-   flutter run
-   ```
-
-5. **Build Release APK:**
-   ```bash
-   flutter build apk --split-per-abi --release
-   ```
-
----
-
-### Part 2: Backend Setup (Spring Boot)
-
-If you wish to run the Java microservice locally or deploy it to a cloud provider (e.g., Railway, Render, AWS):
-
-1. **Navigate to the backend directory:**
+1. Navigate to the backend directory:
    ```bash
    cd SpringBackend
    ```
 
-2. **Configure Environment Secrets:**
-   Copy `.env.example` to `.env`:
+2. Configure environment credentials:
    ```bash
    cp .env.example .env
    ```
-   Fill in your service tokens (Bakong token, Spotify Client ID/Secret, Groq API Key).
+   *Fill in your Groq API key, Spotify credentials, and optional Bakong payment token.*
 
-3. **Run with Maven:**
+3. Run the Spring Boot application:
    ```bash
    # On Windows (PowerShell):
    .\mvnw.cmd spring-boot:run
@@ -151,21 +147,40 @@ If you wish to run the Java microservice locally or deploy it to a cloud provide
    # On Linux/macOS:
    ./mvnw spring-boot:run
    ```
-   The backend will start at `http://localhost:8080`.
+   The backend service will boot up at `http://localhost:8080`.
 
-4. **Run with Docker:**
+---
+
+### Step 2: Run the Mobile Application
+
+1. Navigate to the mobile app directory:
    ```bash
-   docker build -t melo-backend .
-   docker run -p 8080:8080 melo-backend
+   cd melo
+   ```
+
+2. Configure environment credentials:
+   ```bash
+   cp .env.example .env
+   ```
+   *Add your `SUPABASE_URL`, `SUPABASE_ANON_KEY`, and set `BACKEND_URL=http://10.0.2.2:8080` (for Android Emulator) or your local machine IP.*
+
+3. Install dependencies:
+   ```bash
+   flutter pub get
+   ```
+
+4. Launch the application:
+   ```bash
+   flutter run
    ```
 
 ---
 
 ## Security & Secrets Management
 
-- **Zero Committed Secrets:** All production API keys, database credentials, and payment tokens are loaded exclusively through environment variables (`.env`) or cloud environment configs.
-- **Git Protection:** `.gitignore` strictly blocks `.env`, `*.log`, build targets (`target/`, `build/`), and internal credential files from ever reaching version control.
-- **Row Level Security:** Supabase PostgreSQL database tables are protected with granular user-scoped RLS policies.
+- **Zero Hardcoded Credentials:** All API keys, tokens, and database passwords in `application.properties` and the Flutter client dynamically resolve via environment variables.
+- **Protected Version Control:** All `.env` files, `.log` files, and `target/` binaries are strictly excluded by `.gitignore`.
+- **Database Row Level Security:** Every table in the Supabase PostgreSQL database enforces user-scoped RLS policies.
 
 ---
 
