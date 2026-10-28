@@ -43,12 +43,12 @@ void main() async {
 
   const supabaseUrl = String.fromEnvironment(
     'SUPABASE_URL',
-    defaultValue: 'https://nbxhmjdchfyxsbxwksqa.supabase.co',
+    defaultValue: 'https://ebprvubkeyktpvlzneas.supabase.co',
   );
   const supabaseAnonKey = String.fromEnvironment(
     'SUPABASE_ANON_KEY',
     defaultValue:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ieGhtamRjaGZ5eHNieHdrc3FhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM2MzE4NTcsImV4cCI6MjA5OTIwNzg1N30.ZSerroXj3mXBob1BWYBvdKcx5ld2Qsjg6GtbU-lp3lY',
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVicHJ2dWJrZXlrdHB2bHpuZWFzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMxNjU1MTAsImV4cCI6MjEwODc0MTUxMH0.RGfKASmFmSapXF4ptO4tP9gmThHhCwr5i1Zt81ivPoM',
   );
 
   await Supabase.initialize(
