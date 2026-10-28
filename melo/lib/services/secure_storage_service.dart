@@ -31,27 +31,43 @@ class SecureStorageService {
 
   /// Initialize secure storage with defaults on first launch.
   static Future<void> init() async {
-    final arl = await _storage.read(key: deezerArlKey);
-    if ((arl == null || arl.isEmpty) && defaultDeezerArl.isNotEmpty) {
-      await _storage.write(key: deezerArlKey, value: defaultDeezerArl);
+    if (_envDeezerArl.isNotEmpty) {
+      await _storage.write(key: deezerArlKey, value: _envDeezerArl);
+    } else {
+      final arl = await _storage.read(key: deezerArlKey);
+      if ((arl == null || arl.isEmpty) && defaultDeezerArl.isNotEmpty) {
+        await _storage.write(key: deezerArlKey, value: defaultDeezerArl);
+      }
     }
 
-    final groqKey = await _storage.read(key: groqApiKey);
-    if ((groqKey == null || groqKey.isEmpty) && defaultGroqKey.isNotEmpty) {
-      await _storage.write(key: groqApiKey, value: defaultGroqKey);
+    if (_envGroqKey.isNotEmpty) {
+      await _storage.write(key: groqApiKey, value: _envGroqKey);
+    } else {
+      final groqKey = await _storage.read(key: groqApiKey);
+      if ((groqKey == null || groqKey.isEmpty) && defaultGroqKey.isNotEmpty) {
+        await _storage.write(key: groqApiKey, value: defaultGroqKey);
+      }
     }
 
-    final geminiKey = await _storage.read(key: geminiApiKey);
-    if ((geminiKey == null || geminiKey.isEmpty) && defaultGeminiKey.isNotEmpty) {
-      await _storage.write(key: geminiApiKey, value: defaultGeminiKey);
+    if (_envGeminiKey.isNotEmpty) {
+      await _storage.write(key: geminiApiKey, value: _envGeminiKey);
+    } else {
+      final geminiKey = await _storage.read(key: geminiApiKey);
+      if ((geminiKey == null || geminiKey.isEmpty) && defaultGeminiKey.isNotEmpty) {
+        await _storage.write(key: geminiApiKey, value: defaultGeminiKey);
+      }
     }
   }
 
   static Future<String> read(String key) async {
+    if (key == groqApiKey && _envGroqKey.isNotEmpty) return _envGroqKey;
+    if (key == geminiApiKey && _envGeminiKey.isNotEmpty) return _envGeminiKey;
+    if (key == deezerArlKey && _envDeezerArl.isNotEmpty) return _envDeezerArl;
+
     final value = await _storage.read(key: key);
-    if (key == deezerArlKey) return value ?? defaultDeezerArl;
-    if (key == groqApiKey) return value ?? defaultGroqKey;
-    if (key == geminiApiKey) return value ?? defaultGeminiKey;
+    if (key == deezerArlKey) return (value != null && value.isNotEmpty) ? value : defaultDeezerArl;
+    if (key == groqApiKey) return (value != null && value.isNotEmpty) ? value : defaultGroqKey;
+    if (key == geminiApiKey) return (value != null && value.isNotEmpty) ? value : defaultGeminiKey;
     return value ?? '';
   }
 
