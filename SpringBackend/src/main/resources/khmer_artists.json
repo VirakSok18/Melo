@@ -1,0 +1,69 @@
+{
+  "pop": [
+    { "name": "Preap Sovath" },
+    { "name": "Tena" },
+    { "name": "Suly Pheng" },
+    { "name": "ROS Sereysothea" },
+    { "name": "Sokun Nisa" },
+    { "name": "Chhay Virakyuth" },
+    { "name": "Ko Samnang" },
+    { "name": "Vann Rough" },
+    { "name": "Pidor" },
+    { "name": "Khim Sothea" },
+    { "name": "Mao Sophea" },
+    { "name": "Pen Ron" },
+    { "name": "Chin Chan" },
+    { "name": "Vandy" },
+    { "name": "Nang Non" },
+    { "name": "Som Sovanna" },
+    { "name": "Srey Pov" },
+    { "name": "Kong Pisey" },
+    { "name": "Rin Sarun" },
+    { "name": "Sokun Chea" },
+    { "name": "Ly Hour" },
+    { "name": "Keo Sundara" },
+    { "name": "Chan Chhaya" },
+    { "name": "Ouk Sokun" },
+    { "name": "Sopheap" }
+  ],
+  "rap": [
+    { "name": "VannDa" },
+    { "name": "Lowkey" },
+    { "name": "Layo" },
+    { "name": "Kea" },
+    { "name": "Gavreel" },
+    { "name": "Benz" },
+    { "name": "Dark Eyes" },
+    { "name": "K-Auto" },
+    { "name": "UnDo" },
+    { "name": "Rovic" },
+    { "name": "Heng Vannsrey" },
+    { "name": "Zeen" }
+  ],
+  "rock": [
+    { "name": "Dengue Fever" },
+    { "name": "Kamikaze" },
+    { "name": "Sinn Sisamouth" },
+    { "name": "Ros Sereysothea" },
+    { "name": "Yol Aularong" }
+  ],
+  "rnb": [
+    { "name": "Jaha" },
+    { "name": "Nana" },
+    { "name": "Srey Vouch" },
+    { "name": "Kong Vann" },
+    { "name": "Chhom Nimol" }
+  ],
+  "ballad": [
+    { "name": "Preap Sovath" },
+    { "name": "Tena" },
+    { "name": "Sokun Nisa" },
+    { "name": "Mao Sophea" },
+    { "name": "Keo Sundara" },
+    { "name": "Chan Chhaya" },
+    { "name": "Ly Hour" },
+    { "name": "Sopheap" },
+    { "name": "Som Sovanna" },
+    { "name": "Srey Pov" }
+  ]
+}

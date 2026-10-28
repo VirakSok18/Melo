@@ -1,6 +1,7 @@
 *.env
 .env
 .env.*
+!**/.env.example
 
 # Environment and keys
 credential_info*
@@ -12,12 +13,15 @@ credential_info*
 opencode-mcp-figma/
 summary skills/
 AGENTS.md
-backend.log
+*.log
+logs/
 
-# Backend service (managed separately)
-SpringBackend/
+# Spring Boot build artifacts and logs
+SpringBackend/target/
+SpringBackend/*.log
+SpringBackend/logs/
 
-# Other platforms & experimental builds (Keeping repo focused on mobile application)
+# Other platforms & experimental builds (Keeping repo focused on mobile & backend)
 Melo web/
 Melo window/
 melo_landing/

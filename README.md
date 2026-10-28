@@ -2,11 +2,11 @@
   <img src="Logo.svg" alt="Melo Logo" width="100" />
 </p>
 
-# Melo
+# Melo — Intelligent Music Streaming & Social Audio Platform
 
-Personalized music streaming engineered for mood, taste, and real-time social listening.
+Personalized music streaming engineered for mood, taste, and real-time social listening. 
 
-Built with Flutter for iOS and Android.
+Melo offers a dual-mode architecture: a **Standalone Serverless Mobile App** (Flutter + Supabase) that runs out-of-the-box with zero backend hosting, and an optional **Spring Boot Enterprise Microservice Backend** (`SpringBackend/`) for high-throughput streaming proxies, Bakong KHQR payment processing, and external API normalization.
 
 ---
 
@@ -30,41 +30,57 @@ Built with Flutter for iOS and Android.
 
 ---
 
-## Features
+## Key Features
 
 - **AI Playlist Generator**: Natural language prompt deconstruction across mood, activity, and environment. Powered by Groq (Llama 3.3) and Google Gemini with live catalog search and Khmer speech-to-text normalization.
 - **Adaptive Music Identity**: Learns listening preferences from telemetry (completions, skips, replays) to build dynamic taste profiles and daily mixes.
 - **High-Fidelity Audio**: Multi-source adaptive audio streaming pipeline with intelligent background prefetching, fallback caching, and instant playback.
 - **Listen Together**: Synchronized multi-user playback over Supabase Realtime channels.
 - **Offline Playback**: Encrypted local caching of audio tracks and synchronized LRCLIB lyrics.
+- **Bakong KHQR Integration**: Native Cambodian national QR payment standard support via Spring Boot backend for merchant transactions.
 
 ---
 
-## Tech Stack
+## Architecture & Modes
 
-- **Frontend**: Flutter (Dart)
-- **Audio Engine**: just_audio, just_audio_background, custom stream decoders
-- **Backend & Auth**: Supabase (PostgreSQL, Row Level Security, Realtime channels)
-- **AI Models**: Groq (Llama 3.3 70B), Google Gemini 2.5 Flash
-- **Catalog & Audio**: Adaptive multi-source audio pipeline, LRCLIB (synced lyrics)
+Melo is designed to operate flexibly in two modes:
+
+### 1. Standalone / Frontend-First Mode (Current Mobile Release)
+- **Direct Supabase Integration:** Authentication, User Profiles, Liked Songs, Custom Playlists, and Realtime Listen-Together sync run directly against Supabase with PostgreSQL Row Level Security (RLS).
+- **Direct Catalog & AI:** Client directly reaches verified audio sources and Groq AI without requiring any self-hosted proxy server.
+- **Cost:** 100% Free hosting overhead for mobile distribution.
+
+### 2. Microservice Mode (Spring Boot Backend)
+- **Proxy & Audio Caching:** `SpringBackend` handles server-side streaming decoding (Deezer/Spotify/YouTube), rate limiting, and edge caching.
+- **Payment Verification:** Processes Bakong KHQR webhooks and verifies cryptographic payment signatures.
+- **Centralized Email & OTP:** Relays transactional email OTP verification.
 
 ---
 
 ## Project Structure
 
-```
+```text
 Melo/
-├── melo/                     # Flutter mobile application
-│   ├── android/              # Native Android configuration
-│   ├── ios/                  # Native iOS configuration
+├── melo/                         # Flutter Mobile Application (iOS & Android)
+│   ├── android/                  # Native Android configuration & build scripts
+│   ├── ios/                      # Native iOS configuration
 │   ├── lib/
-│   │   ├── config/           # App configuration and API endpoints
-│   │   ├── services/         # Core business logic and streaming engines
-│   │   ├── view/             # UI screens and navigation
-│   │   └── widgets/          # Shared components
-│   └── supabase/             # Database schemas and RLS policies
-├── screenshots/              # Mobile UI screenshots
-└── README.md
+│   │   ├── config/               # App configuration, theme, and API routing
+│   │   ├── services/             # Audio engines, Supabase client, and AI
+│   │   ├── view/                 # UI screens (Home, Player, Search, Profile)
+│   │   └── widgets/              # Shared audio widgets and animated visualizers
+│   └── supabase/                 # Idempotent PostgreSQL schemas & RLS policies
+├── SpringBackend/                # Spring Boot (Java 21) Microservice
+│   ├── src/main/java/com/melo/
+│   │   ├── config/               # Spring Beans (Supabase, Bakong, Spotify, Groq)
+│   │   ├── controller/           # REST endpoints for search, stream & payments
+│   │   ├── service/              # Audio streaming proxy and AI generator logic
+│   │   └── security/             # Rate-limiting filter and security rules
+│   ├── src/main/resources/       # application.properties and seed catalogs
+│   ├── Dockerfile                # Production container deployment definition
+│   └── pom.xml                   # Maven dependencies (Spring Boot 3, Lombok, etc.)
+├── screenshots/                  # Mobile UI showcase captures
+└── README.md                     # Monorepo documentation
 ```
 
 ---
@@ -73,60 +89,86 @@ Melo/
 
 ### Prerequisites
 
-- Flutter SDK (3.27 or higher)
-- Dart SDK (3.6 or higher)
-- Android Studio / Xcode
-
-### 1. Clone the repository
-
-```bash
-git clone https://github.com/VirakSok18/Melo.git
-cd Melo/melo
-```
-
-### 2. Configure Environment
-
-Copy the templates:
-
-```bash
-cp .env.example .env
-cp android/app/google-services.json.example android/app/google-services.json
-```
-
-Add your project credentials to `.env`:
-
-```properties
-GROQ_API_KEY=your_groq_api_key_here
-GEMINI_API_KEY=your_gemini_api_key_here
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_ANON_KEY=your_supabase_anon_key_here
-GOOGLE_WEB_CLIENT_ID=your_google_web_client_id_here
-BACKEND_URL=https://your-backend-url.com
-SHARE_BASE_URL=https://melo.app
-```
-
-### 3. Install Dependencies
-
-```bash
-flutter pub get
-```
-
-### 4. Run the Application
-
-```bash
-flutter run --dart-define-from-file=.env
-```
+- **Flutter SDK**: 3.27 or higher
+- **Java JDK**: 21 or higher (for Spring Boot backend)
+- **Maven**: 3.8+ (or use included `./mvnw`)
+- **Supabase Account**: Free PostgreSQL database
 
 ---
 
-## Security
+### Part 1: Mobile App Setup (Flutter)
 
-- No sensitive API keys or private tokens are stored in version control.
-- Configuration is loaded via `--dart-define-from-file=.env` and persisted into device-encrypted secure storage (`flutter_secure_storage`).
-- Database tables are guarded by Supabase Row Level Security (RLS) policies.
+1. **Navigate to the mobile app directory:**
+   ```bash
+   cd melo
+   ```
+
+2. **Configure Environment:**
+   Copy the example environment template:
+   ```bash
+   cp .env.example .env
+   ```
+   Provide your Supabase URL, Anon Key, and Groq/Gemini API keys.
+
+3. **Install Dependencies:**
+   ```bash
+   flutter pub get
+   ```
+
+4. **Run the Application:**
+   ```bash
+   flutter run
+   ```
+
+5. **Build Release APK:**
+   ```bash
+   flutter build apk --split-per-abi --release
+   ```
+
+---
+
+### Part 2: Backend Setup (Spring Boot)
+
+If you wish to run the Java microservice locally or deploy it to a cloud provider (e.g., Railway, Render, AWS):
+
+1. **Navigate to the backend directory:**
+   ```bash
+   cd SpringBackend
+   ```
+
+2. **Configure Environment Secrets:**
+   Copy `.env.example` to `.env`:
+   ```bash
+   cp .env.example .env
+   ```
+   Fill in your service tokens (Bakong token, Spotify Client ID/Secret, Groq API Key).
+
+3. **Run with Maven:**
+   ```bash
+   # On Windows (PowerShell):
+   .\mvnw.cmd spring-boot:run
+
+   # On Linux/macOS:
+   ./mvnw spring-boot:run
+   ```
+   The backend will start at `http://localhost:8080`.
+
+4. **Run with Docker:**
+   ```bash
+   docker build -t melo-backend .
+   docker run -p 8080:8080 melo-backend
+   ```
+
+---
+
+## Security & Secrets Management
+
+- **Zero Committed Secrets:** All production API keys, database credentials, and payment tokens are loaded exclusively through environment variables (`.env`) or cloud environment configs.
+- **Git Protection:** `.gitignore` strictly blocks `.env`, `*.log`, build targets (`target/`, `build/`), and internal credential files from ever reaching version control.
+- **Row Level Security:** Supabase PostgreSQL database tables are protected with granular user-scoped RLS policies.
 
 ---
 
 ## Author
 
-Sok Virak
+**Sok Virak** — [@VirakSok18](https://github.com/VirakSok18)
