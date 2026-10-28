@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:just_audio_background/just_audio_background.dart';
-// No backend: api_config removed
+import 'config/api_config.dart';
 import 'services/download_service.dart';
 import 'services/listening_history_service.dart';
 import 'services/liked_songs_service.dart';
@@ -65,8 +65,8 @@ void main() async {
 
 Future<void> _runBackgroundInit() async {
   try {
-    // Zero backend: host probing disabled
-    // Zero backend: auto refresh disabled
+    ApiConfig.refreshHost();
+    ApiConfig.startAutoRefresh();
     DownloadService.init();
     ProfileService().init();
     ProfileFollowService().init();

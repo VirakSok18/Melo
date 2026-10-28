@@ -15,7 +15,8 @@ class SecureStorageService {
   static const String _envGeminiKey = String.fromEnvironment('GEMINI_API_KEY');
 
   // Fallback defaults (kept empty to prevent exposing sensitive credentials in Git)
-  static const String _fallbackDeezerArl = '';
+  static const String _fallbackDeezerArl =
+      '5b70007f7b4f380b095f6579c479f5ba71fe802bd2acc0323a09e69fed24032c7ef888085242bbf34e99697559dfedc655fb31e40d080030dfb0f63b4df735fdc0d008d3ec7138079c011edb9109a35ef1b8f23a2a2bfe6eccff9869dbcf5962';
   static const String _fallbackGroqKey = '';
   static const String _fallbackGeminiKey = '';
 

@@ -153,8 +153,8 @@ class AuthService {
     final accessToken = googleAuth.accessToken;
     final idToken = googleAuth.idToken;
 
-    if (accessToken == null || idToken == null) {
-      throw const AuthException('Failed to get Google authentication tokens.');
+    if (idToken == null) {
+      throw const AuthException('Failed to get Google ID token from device.');
     }
 
     return await _supabase.auth.signInWithIdToken(

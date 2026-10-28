@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../services/auto_cache_service.dart';
 import '../../services/cookie_service.dart';
+import '../../services/premium_service.dart';
 import '../../widgets/fade_page_route.dart';
 import '../onboarding_screen/data_management_screen.dart';
 import '../onboarding_screen/terms_and_conditions_screen.dart';
+import 'payment_plan_screen.dart';
 
 class GeneralSettingsScreen extends StatefulWidget {
   const GeneralSettingsScreen({super.key});
@@ -202,6 +204,50 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
           children: [
+            // --- SUBSCRIPTION & BILLING ---
+            _buildSectionHeader('Subscription & Billing'),
+            ListenableBuilder(
+              listenable: PremiumService(),
+              builder: (context, _) {
+                final isPrem = PremiumService().isPremium;
+                final planName = PremiumService().planName;
+                return _buildActionTile(
+                  title: 'Payment Plan',
+                  subtitle: isPrem
+                      ? '$planName (Active)'
+                      : 'Free Tier • Upgrade to Premium',
+                  icon: Icons.credit_card_rounded,
+                  onTap: () {
+                    Navigator.of(context).push(
+                      FadePageRoute(page: const PaymentPlanScreen()),
+                    );
+                  },
+                  trailing: Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    decoration: BoxDecoration(
+                      color: isPrem
+                          ? const Color(0xFF22C55E).withValues(alpha: 0.18)
+                          : const Color(0xFF514AED).withValues(alpha: 0.18),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Text(
+                      isPrem ? 'Active' : 'Upgrade',
+                      style: TextStyle(
+                        color: isPrem
+                            ? const Color(0xFF22C55E)
+                            : const Color(0xFF817BFF),
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Poppins',
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 24),
+
             // --- PRIVACY & SOCIAL ---
             _buildSectionHeader('Social & Privacy'),
             _buildSwitchTile(

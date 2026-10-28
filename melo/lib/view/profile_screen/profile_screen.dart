@@ -17,6 +17,7 @@ import '../../widgets/fade_page_route.dart';
 import '../../services/premium_service.dart';
 import 'edit_profile_bottom_sheet.dart';
 import 'general_settings_screen.dart';
+import 'payment_plan_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -124,6 +125,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 onTap: () {
                   Navigator.pop(ctx);
                   EditProfileBottomSheet.show(context);
+                },
+              ),
+              const Divider(color: Colors.white12, height: 16),
+              ListTile(
+                leading: const Icon(
+                  Icons.credit_card_rounded,
+                  color: Color(0xFF817BFF),
+                  size: 24,
+                ),
+                title: const Text(
+                  'Payment Plan',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Poppins',
+                  ),
+                ),
+                subtitle: Text(
+                  PremiumService().isPremium
+                      ? '${PremiumService().planName} (Active)'
+                      : 'Free Tier • Manage plan',
+                  style: const TextStyle(
+                    color: Colors.white54,
+                    fontSize: 12,
+                    fontFamily: 'Poppins',
+                  ),
+                ),
+                trailing: const Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  color: Colors.white38,
+                  size: 16,
+                ),
+                onTap: () {
+                  Navigator.pop(ctx);
+                  Navigator.of(context).push(
+                    FadePageRoute(page: const PaymentPlanScreen()),
+                  );
                 },
               ),
               const Divider(color: Colors.white12, height: 16),
