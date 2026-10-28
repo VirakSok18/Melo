@@ -32,7 +32,7 @@ import '../../services/background_prefetch_service.dart';
 import '../../services/premium_service.dart';
 import '../../services/cookie_service.dart';
 import '../generate_screen/generate_screen.dart';
-import '../premium_screen/subscription_expiry_dialog.dart';
+// subscription_expiry_dialog removed (app is free)
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -101,7 +101,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      SubscriptionExpiryDialog.checkAndShow(context);
+      // Subscription expiry check removed (app is 100% free)
     });
   }
 

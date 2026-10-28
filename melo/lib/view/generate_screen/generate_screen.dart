@@ -1253,8 +1253,15 @@ class _GenerateScreenState extends State<GenerateScreen>
     }
 
     // Check Premium AI generation allowance (2 free lifetime trials)
-    if (!PremiumService().canGenerateAiPlaylist) {
-      PremiumService.showUpsell(
+    if (!PremiumService().canTriggerAiGeneration()) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+              'Please wait a moment before generating another playlist.'),
+        ),
+      );
+      // ignore: dead_code
+      if (false) PremiumService.showUpsell(
         context,
         reason:
             'You have used your 2 free AI playlist trials. Upgrade to Melo Premium for unlimited AI generations!',

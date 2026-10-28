@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../../services/api_service.dart';
+import '../../services/auth_service.dart';
 import '../../main.dart';
 
 class OtpScreen extends StatefulWidget {
@@ -18,7 +18,6 @@ class _OtpScreenState extends State<OtpScreen> {
   final List<TextEditingController> _controllers =
       List.generate(6, (index) => TextEditingController());
   final List<FocusNode> _focusNodes = List.generate(6, (index) => FocusNode());
-  final SupabaseClient _supabase = Supabase.instance.client;
   bool _isLoading = false;
   int _resendSeconds = 60;
 
@@ -64,27 +63,18 @@ class _OtpScreenState extends State<OtpScreen> {
     setState(() => _isLoading = true);
 
     try {
-      // Step 1: Verify OTP with our backend
-      final result = await ApiService.verifyOtp(widget.email, code);
-
-      if (result['success'] != true) {
-        if (mounted) {
-          _showError(result['message'] ?? 'Invalid verification code');
-        }
-        return;
-      }
-
-      // Step 2: OTP verified — now create the Supabase account
-      final signUpResponse = await _supabase.auth.signUp(
+      final res = await AuthService().verifySignUpOtp(
         email: widget.email,
-        password: widget.password,
+        token: code,
       );
 
-      if (signUpResponse.user != null && mounted) {
+      if (res.user != null && mounted) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const AuthGate()),
         );
+      } else {
+        _showError('Verification failed. Please check your code.');
       }
     } on AuthException catch (e) {
       _showError(e.message);
@@ -99,7 +89,7 @@ class _OtpScreenState extends State<OtpScreen> {
     if (_resendSeconds > 0) return;
 
     try {
-      await ApiService.sendOtp(widget.email);
+      await AuthService().resendSignUpOtp(email: widget.email);
       setState(() => _resendSeconds = 60);
       _startResendTimer();
       if (mounted) {
@@ -110,6 +100,8 @@ class _OtpScreenState extends State<OtpScreen> {
           ),
         );
       }
+    } on AuthException catch (e) {
+      _showError(e.message);
     } catch (e) {
       _showError('Failed to resend code');
     }

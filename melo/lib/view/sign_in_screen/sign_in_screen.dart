@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import '../sign_up_screen/sign_up_screen.dart';
 import '../forgot_password_screen/forgot_password_screen.dart';
+import '../../services/auth_service.dart';
 import '../../main.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -75,40 +75,11 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   Future<void> _signInWithGoogle() async {
+    setState(() => _isLoading = true);
     try {
-      const webClientId = String.fromEnvironment(
-        'GOOGLE_WEB_CLIENT_ID',
-        defaultValue: 'your_google_web_client_id_here',
-      );
-      final googleSignIn = GoogleSignIn(
-        serverClientId: webClientId,
-      );
-      await googleSignIn.signOut();
-      final googleUser = await googleSignIn.signIn();
-      if (googleUser == null) {
-        _showError('Google sign in was cancelled');
-        return;
-      }
+      await AuthService().signInWithGoogle();
 
-      final googleAuth = await googleUser.authentication;
-      final idToken = googleAuth.idToken;
-      final accessToken = googleAuth.accessToken;
-
-      if (idToken == null || accessToken == null) {
-        _showError('Failed to get Google tokens');
-        return;
-      }
-
-      debugPrint('ID Token: ${idToken.substring(0, 20)}...');
-      debugPrint('Access Token: ${accessToken.substring(0, 20)}...');
-
-      await _supabase.auth.signInWithIdToken(
-        provider: OAuthProvider.google,
-        idToken: idToken,
-        accessToken: accessToken,
-      );
-
-      debugPrint('Sign in successful!');
+      debugPrint('Google Sign in successful!');
 
       if (mounted) {
         Navigator.of(context).pushAndRemoveUntil(
@@ -116,10 +87,12 @@ class _SignInScreenState extends State<SignInScreen> {
           (route) => false,
         );
       }
-    } catch (e, s) {
-      debugPrint('Google sign in error: $e');
-      debugPrint('Stack trace: $s');
+    } on AuthException catch (e) {
+      _showError(e.message);
+    } catch (e) {
       _showError('Google sign in failed: $e');
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 

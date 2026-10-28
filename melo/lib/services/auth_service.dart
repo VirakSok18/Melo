@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -18,44 +19,134 @@ import 'profile_service.dart';
 import 'premium_service.dart';
 
 class AuthService {
+  static final AuthService _instance = AuthService._internal();
+  factory AuthService() => _instance;
+  AuthService._internal();
+
   final SupabaseClient _supabase = Supabase.instance.client;
 
   User? get currentUser => _supabase.auth.currentUser;
   Stream<AuthState> get authStateChanges => _supabase.auth.onAuthStateChange;
 
+  // Anti-spam cooldown timers (in milliseconds)
+  DateTime? _lastSignUpAttempt;
+  DateTime? _lastOtpResendAttempt;
+  DateTime? _lastPasswordResetAttempt;
+
+  static const Duration _cooldownDuration = Duration(seconds: 45);
+
+  /// Validates email address format
+  static bool isValidEmail(String email) {
+    final trimmed = email.trim();
+    if (trimmed.isEmpty || trimmed.length > 254) return false;
+    final emailRegex =
+        RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+    return emailRegex.hasMatch(trimmed);
+  }
+
+  /// Direct client-side sign up via Supabase Auth with security validation and rate-limiting
   Future<AuthResponse> signUpWithEmail({
     required String email,
     required String password,
   }) async {
+    final cleanEmail = email.trim();
+    if (!isValidEmail(cleanEmail)) {
+      throw const AuthException('Please enter a valid email address.');
+    }
+    if (password.length < 6) {
+      throw const AuthException('Password must be at least 6 characters long.');
+    }
+
+    // Rate-limiting check to prevent spam abuse
+    final now = DateTime.now();
+    if (_lastSignUpAttempt != null &&
+        now.difference(_lastSignUpAttempt!) < const Duration(seconds: 5)) {
+      throw const AuthException(
+          'Too many requests. Please wait a few seconds before trying again.');
+    }
+    _lastSignUpAttempt = now;
+
     return await _supabase.auth.signUp(
-      email: email,
+      email: cleanEmail,
       password: password,
     );
   }
 
+  /// Verifies a 6-digit OTP code for sign-up directly via Supabase Auth
+  Future<AuthResponse> verifySignUpOtp({
+    required String email,
+    required String token,
+  }) async {
+    final cleanEmail = email.trim();
+    final cleanToken = token.trim();
+
+    if (cleanToken.length != 6) {
+      throw const AuthException('Please enter a valid 6-digit verification code.');
+    }
+
+    return await _supabase.auth.verifyOTP(
+      email: cleanEmail,
+      token: cleanToken,
+      type: OtpType.signup,
+    );
+  }
+
+  /// Resends sign-up OTP code with 45s cooldown security guard
+  Future<void> resendSignUpOtp({
+    required String email,
+  }) async {
+    final cleanEmail = email.trim();
+    final now = DateTime.now();
+    if (_lastOtpResendAttempt != null &&
+        now.difference(_lastOtpResendAttempt!) < _cooldownDuration) {
+      final remaining =
+          _cooldownDuration.inSeconds - now.difference(_lastOtpResendAttempt!).inSeconds;
+      throw AuthException(
+          'Please wait $remaining seconds before requesting another code.');
+    }
+    _lastOtpResendAttempt = now;
+
+    await _supabase.auth.resend(
+      type: OtpType.signup,
+      email: cleanEmail,
+    );
+  }
+
+  /// Direct client-side sign in via Supabase Auth
   Future<AuthResponse> signInWithEmail({
     required String email,
     required String password,
   }) async {
+    final cleanEmail = email.trim();
+    if (!isValidEmail(cleanEmail)) {
+      throw const AuthException('Please enter a valid email address.');
+    }
+    if (password.isEmpty) {
+      throw const AuthException('Please enter your password.');
+    }
+
     return await _supabase.auth.signInWithPassword(
-      email: email,
+      email: cleanEmail,
       password: password,
     );
   }
 
+  /// Direct client-side Google Sign-In with Supabase Auth OAuth provider
   Future<AuthResponse> signInWithGoogle() async {
     const webClientId = String.fromEnvironment(
       'GOOGLE_WEB_CLIENT_ID',
-      defaultValue: 'your_google_web_client_id_here',
+      defaultValue:
+          '583980575924-q4ellmg3de7hibrhpo04alpr4rf2nm2b.apps.googleusercontent.com',
     );
 
     final GoogleSignIn googleSignIn = GoogleSignIn(
       serverClientId: webClientId,
     );
 
+    await googleSignIn.signOut();
     final googleUser = await googleSignIn.signIn();
     if (googleUser == null) {
-      throw Exception('Google sign in was cancelled');
+      throw const AuthException('Google sign in was cancelled');
     }
 
     final googleAuth = await googleUser.authentication;
@@ -63,7 +154,7 @@ class AuthService {
     final idToken = googleAuth.idToken;
 
     if (accessToken == null || idToken == null) {
-      throw Exception('Failed to get Google tokens');
+      throw const AuthException('Failed to get Google authentication tokens.');
     }
 
     return await _supabase.auth.signInWithIdToken(
@@ -80,6 +171,57 @@ class AuthService {
     );
   }
 
+  /// Initiates password reset by sending an OTP directly via Supabase Auth
+  Future<void> sendPasswordResetOtp(String email) async {
+    final cleanEmail = email.trim();
+    if (!isValidEmail(cleanEmail)) {
+      throw const AuthException('Please enter a valid email address.');
+    }
+
+    final now = DateTime.now();
+    if (_lastPasswordResetAttempt != null &&
+        now.difference(_lastPasswordResetAttempt!) < _cooldownDuration) {
+      final remaining =
+          _cooldownDuration.inSeconds - now.difference(_lastPasswordResetAttempt!).inSeconds;
+      throw AuthException(
+          'Please wait $remaining seconds before requesting another reset code.');
+    }
+    _lastPasswordResetAttempt = now;
+
+    await _supabase.auth.resetPasswordForEmail(cleanEmail);
+  }
+
+  /// Verifies password reset OTP code directly via Supabase Auth
+  Future<AuthResponse> verifyPasswordResetOtp({
+    required String email,
+    required String token,
+  }) async {
+    final cleanEmail = email.trim();
+    final cleanToken = token.trim();
+
+    if (cleanToken.length != 6) {
+      throw const AuthException('Please enter a valid 6-digit code.');
+    }
+
+    return await _supabase.auth.verifyOTP(
+      email: cleanEmail,
+      token: cleanToken,
+      type: OtpType.recovery,
+    );
+  }
+
+  /// Updates user password directly via Supabase Auth
+  Future<UserResponse> updatePassword(String newPassword) async {
+    if (newPassword.length < 6) {
+      throw const AuthException('Password must be at least 6 characters long.');
+    }
+
+    return await _supabase.auth.updateUser(
+      UserAttributes(password: newPassword),
+    );
+  }
+
+  /// Signs out and purges local user caches
   Future<void> signOut() async {
     // Reset in-memory services immediately
     PlaybackService().reset();
@@ -120,6 +262,6 @@ class AuthService {
   }
 
   Future<void> resetPassword(String email) async {
-    await _supabase.auth.resetPasswordForEmail(email);
+    await sendPasswordResetOtp(email);
   }
 }

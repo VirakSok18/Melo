@@ -16,47 +16,7 @@ class SubscriptionExpiryDialog {
     BuildContext context, {
     bool force = false,
   }) async {
-    final premiumService = PremiumService();
-    final nextBilling = premiumService.nextBillingDate;
-
-    if (nextBilling == null) return;
-
-    final now = DateTime.now();
-    final todayStr = now.toIso8601String().substring(0, 10);
-
-    if (!force) {
-      final prefs = await SharedPreferences.getInstance();
-      final lastShown = prefs.getString(_keyLastShownDate);
-      if (lastShown == todayStr) {
-        // Already shown today!
-        return;
-      }
-    }
-
-    final todayDate = DateTime(now.year, now.month, now.day);
-    final expiryDate =
-        DateTime(nextBilling.year, nextBilling.month, nextBilling.day);
-    final daysRemaining = expiryDate.difference(todayDate).inDays;
-
-    if (daysRemaining == 1 || daysRemaining == 2) {
-      // 1 or 2 days left before expiration
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString(_keyLastShownDate, todayStr);
-      if (context.mounted) {
-        showExpiringSoonDialog(
-          context,
-          daysLeft: daysRemaining,
-          expiryDate: nextBilling,
-        );
-      }
-    } else if (daysRemaining == 0 || daysRemaining == -1) {
-      // Exactly on the day it ends (or next morning)
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString(_keyLastShownDate, todayStr);
-      if (context.mounted) {
-        showExpiredDialog(context);
-      }
-    }
+    return;
   }
 
   /// Minimal clean dialog when 1-2 days remain on user's subscription

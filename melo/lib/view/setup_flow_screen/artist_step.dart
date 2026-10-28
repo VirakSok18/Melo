@@ -1,12 +1,10 @@
 import '../../widgets/cached_image.dart';
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../services/artist_service.dart';
-import '../../config/api_config.dart';
+import '../../services/artist_follow_service.dart';
 import '../../main.dart';
 import '../../widgets/skeleton_loader.dart';
 
@@ -290,33 +288,40 @@ class _ArtistStepState extends State<ArtistStep> {
         avatarUrl = widget.selectedAvatar;
       }
 
-      // Submit full profile setup
-      final accessToken = _supabase.auth.currentSession?.accessToken ?? '';
-      final setupResponse = await http.post(
-        Uri.parse('${ApiConfig.baseUrlSync}/api/profile/setup'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $accessToken',
-        },
-        body: jsonEncode({
-          'userId': userId,
+      // Submit full profile setup directly to Supabase
+      await _supabase.from('profiles').upsert({
+        'id': userId,
+        if (widget.username != null && widget.username!.isNotEmpty)
           'username': widget.username,
-          'displayName': widget.displayName,
-          'avatarUrl': avatarUrl,
-          'favoriteGenres': widget.selectedGenres.toList(),
-          'favoriteArtists': selectedArtists,
-        }),
-      );
+        if (widget.displayName != null && widget.displayName!.isNotEmpty)
+          'display_name': widget.displayName,
+        if (avatarUrl != null && avatarUrl.isNotEmpty)
+          'avatar_url': avatarUrl,
+        'favorite_genres': widget.selectedGenres.toList(),
+        'favorite_artists': selectedArtists,
+        'profile_setup_completed': true,
+        'updated_at': DateTime.now().toIso8601String(),
+      });
 
-      final setupJson = jsonDecode(setupResponse.body) as Map<String, dynamic>;
-      if (setupJson['success'] == true) {
-        // Seed the profile-complete cache so AuthGate goes straight to Home
-        // instead of re-running setup while it re-validates with Supabase.
-        await AuthGate.markProfileComplete();
-        widget.onContinue();
-      } else {
-        throw Exception(setupJson['message'] ?? 'Setup failed');
+      // Also register followed artists in local and remote cache
+      for (final artist in selectedArtists) {
+        final aId = artist['id']?.toString() ?? '';
+        final aName = artist['name']?.toString() ?? '';
+        final aImg = artist['image']?.toString() ?? '';
+        if (aId.isNotEmpty && aName.isNotEmpty) {
+          try {
+            await ArtistFollowService().followArtist(
+              artistId: aId,
+              artistName: aName,
+              artistImage: aImg,
+            );
+          } catch (_) {}
+        }
       }
+
+      // Seed the profile-complete cache so AuthGate goes straight to Home
+      await AuthGate.markProfileComplete();
+      widget.onContinue();
     } catch (e) {
       debugPrint('Setup error: $e');
       if (mounted) {

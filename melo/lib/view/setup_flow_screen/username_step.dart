@@ -1,9 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../../config/api_config.dart';
 
 enum UsernameStatus {
   idle,
@@ -44,8 +41,6 @@ class _UsernameStepState extends State<UsernameStep> {
   UsernameStatus _usernameStatus = UsernameStatus.idle;
   String? _checkedUsername;
   Timer? _debounceTimer;
-
-  static String get _baseUrl => '${ApiConfig.baseUrlSync}/api/profile';
 
   @override
   void initState() {
@@ -131,33 +126,13 @@ class _UsernameStepState extends State<UsernameStep> {
         _usernameStatus =
             isAvailable ? UsernameStatus.available : UsernameStatus.taken;
       });
-    } catch (e) {
-      // Fallback to Spring Boot endpoint
-      try {
-        final response = await http
-            .get(
-              Uri.parse('$_baseUrl/check-username?username=$username'),
-            )
-            .timeout(const Duration(seconds: 4));
-
-        if (!mounted) return;
-        if (_usernameController.text.trim().toLowerCase() != username) return;
-
-        final json = jsonDecode(response.body) as Map<String, dynamic>;
-        final isAvailable = json['available'] == true;
-
+    } catch (_) {
+      if (mounted &&
+          _usernameController.text.trim().toLowerCase() == username) {
         setState(() {
           _checkedUsername = username;
-          _usernameStatus =
-              isAvailable ? UsernameStatus.available : UsernameStatus.taken;
+          _usernameStatus = UsernameStatus.available;
         });
-      } catch (_) {
-        if (mounted &&
-            _usernameController.text.trim().toLowerCase() == username) {
-          setState(() {
-            _usernameStatus = UsernameStatus.idle;
-          });
-        }
       }
     }
   }

@@ -1,8 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import '../../services/api_service.dart';
+import '../../services/auth_service.dart';
 import '../sign_in_screen/sign_in_screen.dart';
 import '../../main.dart';
 import '../otp_screen/otp_screen.dart';
@@ -54,19 +53,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   Future<void> _signUp() async {
-    if (_emailController.text.isEmpty ||
-        _passwordController.text.isEmpty ||
-        _confirmPasswordController.text.isEmpty) {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+    final confirmPassword = _confirmPasswordController.text;
+
+    if (email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
       _showError('Please fill in all fields');
       return;
     }
 
-    if (_passwordController.text != _confirmPasswordController.text) {
+    if (!AuthService.isValidEmail(email)) {
+      _showError('Please enter a valid email address');
+      return;
+    }
+
+    if (password != confirmPassword) {
       _showError('Passwords do not match');
       return;
     }
 
-    if (_passwordController.text.length < 6) {
+    if (password.length < 6) {
       _showError('Password must be at least 6 characters');
       return;
     }
@@ -79,12 +85,30 @@ class _SignUpScreenState extends State<SignUpScreen> {
     setState(() => _isLoading = true);
 
     try {
-      final result = await ApiService.sendOtp(_emailController.text.trim());
+      final authResponse = await AuthService().signUpWithEmail(
+        email: email,
+        password: password,
+      );
 
-      if (result['success'] == true && mounted) {
+      if (!mounted) return;
+
+      if (authResponse.session != null) {
+        // Immediate login! (No email confirmation required)
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Account created successfully!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => const AuthGate()),
+          (route) => false,
+        );
+      } else {
+        // Supabase sent verification OTP / confirmation email
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(result['message'] ?? 'Verification code sent!'),
+            content: Text('Verification code sent to $email!'),
             backgroundColor: Colors.green,
           ),
         );
@@ -92,53 +116,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
           context,
           MaterialPageRoute(
             builder: (context) => OtpScreen(
-              email: _emailController.text.trim(),
-              password: _passwordController.text,
+              email: email,
+              password: password,
             ),
           ),
         );
-      } else if (mounted) {
-        _showError(result['message'] ?? 'Failed to send verification code');
       }
+    } on AuthException catch (e) {
+      _showError(e.message);
     } catch (e) {
-      _showError('Failed to connect to server');
+      _showError('Sign up failed. Please check your network and try again.');
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
   }
 
   Future<void> _signUpWithGoogle() async {
+    setState(() => _isLoading = true);
     try {
-      const webClientId = String.fromEnvironment(
-        'GOOGLE_WEB_CLIENT_ID',
-        defaultValue: 'your_google_web_client_id_here',
-      );
-      final googleSignIn = GoogleSignIn(
-        serverClientId: webClientId,
-      );
-      await googleSignIn.signOut();
-      final googleUser = await googleSignIn.signIn();
-      if (googleUser == null) {
-        _showError('Google sign up was cancelled');
-        return;
-      }
+      await AuthService().signInWithGoogle();
 
-      final googleAuth = await googleUser.authentication;
-      final idToken = googleAuth.idToken;
-      final accessToken = googleAuth.accessToken;
-
-      if (idToken == null || accessToken == null) {
-        _showError('Failed to get Google tokens');
-        return;
-      }
-
-      await _supabase.auth.signInWithIdToken(
-        provider: OAuthProvider.google,
-        idToken: idToken,
-        accessToken: accessToken,
-      );
-
-      debugPrint('Sign up successful!');
+      debugPrint('Google Sign up successful!');
 
       if (mounted) {
         Navigator.of(context).pushAndRemoveUntil(
@@ -146,8 +144,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
           (route) => false,
         );
       }
+    } on AuthException catch (e) {
+      _showError(e.message);
     } catch (e) {
       _showError('Google sign up failed: $e');
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
