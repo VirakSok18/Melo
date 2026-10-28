@@ -288,20 +288,34 @@ class _ArtistStepState extends State<ArtistStep> {
         avatarUrl = widget.selectedAvatar;
       }
 
-      // Submit full profile setup directly to Supabase
-      await _supabase.from('profiles').upsert({
-        'id': userId,
-        if (widget.username != null && widget.username!.isNotEmpty)
-          'username': widget.username,
-        if (widget.displayName != null && widget.displayName!.isNotEmpty)
-          'display_name': widget.displayName,
-        if (avatarUrl != null && avatarUrl.isNotEmpty)
-          'avatar_url': avatarUrl,
-        'favorite_genres': widget.selectedGenres.toList(),
-        'favorite_artists': selectedArtists,
-        'profile_setup_completed': true,
-        'updated_at': DateTime.now().toIso8601String(),
-      });
+      // Submit full profile setup directly to Supabase with resilient fallback
+      try {
+        await _supabase.from('profiles').upsert({
+          'id': userId,
+          if (widget.username != null && widget.username!.isNotEmpty)
+            'username': widget.username,
+          if (widget.displayName != null && widget.displayName!.isNotEmpty)
+            'display_name': widget.displayName,
+          if (avatarUrl != null && avatarUrl.isNotEmpty)
+            'avatar_url': avatarUrl,
+          'favorite_genres': widget.selectedGenres.toList(),
+          'favorite_artists': selectedArtists,
+          'profile_setup_completed': true,
+          'updated_at': DateTime.now().toIso8601String(),
+        });
+      } catch (upsertErr) {
+        debugPrint('Full profile upsert error, falling back to core columns: ');
+        await _supabase.from('profiles').upsert({
+          'id': userId,
+          if (widget.username != null && widget.username!.isNotEmpty)
+            'username': widget.username,
+          if (widget.displayName != null && widget.displayName!.isNotEmpty)
+            'display_name': widget.displayName,
+          if (avatarUrl != null && avatarUrl.isNotEmpty)
+            'avatar_url': avatarUrl,
+          'profile_setup_completed': true,
+        });
+      }
 
       // Also register followed artists in local and remote cache
       for (final artist in selectedArtists) {

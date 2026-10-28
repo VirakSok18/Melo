@@ -446,7 +446,7 @@ class _AuthGateState extends State<AuthGate> {
     try {
       final profile = await Supabase.instance.client
           .from('profiles')
-          .select('profile_setup_completed, username, favorite_artists')
+          .select('profile_setup_completed, username')
           .eq('id', user.id)
           .maybeSingle()
           .timeout(const Duration(seconds: 4));
@@ -455,8 +455,7 @@ class _AuthGateState extends State<AuthGate> {
         final completed = profile?['profile_setup_completed'] == true;
         final hasUsername = profile?['username'] != null &&
             (profile?['username'] as String).isNotEmpty;
-        final hasArtists = profile?['favorite_artists'] != null;
-        final isFullyCompleted = completed && hasUsername && hasArtists;
+                final isFullyCompleted = completed && hasUsername;
 
         if (isFullyCompleted) {
           await prefs.setBool(AuthGate._profileCacheKey, true);
@@ -482,7 +481,7 @@ class _AuthGateState extends State<AuthGate> {
       if (mounted) {
         setState(() {
           // If offline or network error, trust cached status (default to true if user is logged in)
-          _profileCompleted = cachedCompleted ?? true;
+          _profileCompleted = cachedCompleted ?? false;
         });
       }
     }
