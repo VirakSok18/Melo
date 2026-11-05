@@ -32,7 +32,6 @@ import '../../services/background_prefetch_service.dart';
 import '../../services/premium_service.dart';
 import '../../services/cookie_service.dart';
 import '../generate_screen/generate_screen.dart';
-import '../premium_screen/subscription_expiry_dialog.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -100,9 +99,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       _checkAndRefreshStaleContent();
     });
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      SubscriptionExpiryDialog.checkAndShow(context);
-    });
   }
 
   @override
@@ -301,11 +297,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   void _onFollowsChanged() {
     if (mounted) {
       setState(() {});
-      // Force a second rebuild after the current frame to ensure the
-      // artists section picks up the latest data from ArtistFollowService.
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) setState(() {});
-      });
     }
   }
 
@@ -752,99 +743,101 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     return CustomScrollView(
       slivers: [
         SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 56),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Text(
-                              _greeting,
-                              style: TextStyle(
-                                color: Colors.white.withValues(alpha: 0.6),
-                                fontSize: 15,
-                                fontFamily: 'Poppins',
+          child: RepaintBoundary(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 56),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                _greeting,
+                                style: TextStyle(
+                                  color: Colors.white.withValues(alpha: 0.6),
+                                  fontSize: 15,
+                                  fontFamily: 'Poppins',
+                                ),
                               ),
-                            ),
-                            const SizedBox(width: 2),
-                            Text(
-                              ',',
-                              style: TextStyle(
-                                color: Colors.white.withValues(alpha: 0.6),
-                                fontSize: 15,
+                              const SizedBox(width: 2),
+                              Text(
+                                ',',
+                                style: TextStyle(
+                                  color: Colors.white.withValues(alpha: 0.6),
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'Poppins',
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 2),
+                          ShaderMask(
+                            shaderCallback: (bounds) => const LinearGradient(
+                              colors: [
+                                Color(0xFF514AED),
+                                Color(0xFFFFFFFF),
+                              ],
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                            ).createShader(bounds),
+                            child: Text(
+                              _displayName,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 22,
                                 fontWeight: FontWeight.bold,
                                 fontFamily: 'Poppins',
                               ),
                             ),
-                          ],
-                        ),
-                        const SizedBox(height: 2),
-                        ShaderMask(
-                          shaderCallback: (bounds) => const LinearGradient(
-                            colors: [
-                              Color(0xFF514AED),
-                              Color(0xFFFFFFFF),
-                            ],
-                            begin: Alignment.centerLeft,
-                            end: Alignment.centerRight,
-                          ).createShader(bounds),
-                          child: Text(
-                            _displayName,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Poppins',
-                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.of(context, rootNavigator: true).push(
-                          FadePageRoute(page: const ProfileScreen()),
-                        );
-                      },
-                      child: _buildAvatar(),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 24),
-              ],
+                        ],
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context, rootNavigator: true).push(
+                            FadePageRoute(page: const ProfileScreen()),
+                          );
+                        },
+                        child: _buildAvatar(),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+                ],
+              ),
             ),
           ),
         ),
-        SliverToBoxAdapter(child: _buildYourVibeSection()),
+        SliverToBoxAdapter(child: RepaintBoundary(child: _buildYourVibeSection())),
         const SliverToBoxAdapter(child: SizedBox(height: 40)),
         SliverToBoxAdapter(child: _buildSectionHeader('New Releases', () {})),
         const SliverToBoxAdapter(child: SizedBox(height: 16)),
-        SliverToBoxAdapter(child: _buildNewlyReleasedSection()),
+        SliverToBoxAdapter(child: RepaintBoundary(child: _buildNewlyReleasedSection())),
         const SliverToBoxAdapter(child: SizedBox(height: 32)),
         SliverToBoxAdapter(child: _buildSectionHeader('Trending now', () {})),
         const SliverToBoxAdapter(child: SizedBox(height: 16)),
-        SliverToBoxAdapter(child: _buildTrendingSection()),
+        SliverToBoxAdapter(child: RepaintBoundary(child: _buildTrendingSection())),
         const SliverToBoxAdapter(child: SizedBox(height: 32)),
         SliverToBoxAdapter(child: _buildSectionHeader('Your Artists', () {})),
         const SliverToBoxAdapter(child: SizedBox(height: 16)),
-        SliverToBoxAdapter(child: _buildYourArtistsSection()),
+        SliverToBoxAdapter(child: RepaintBoundary(child: _buildYourArtistsSection())),
         const SliverToBoxAdapter(child: SizedBox(height: 32)),
         SliverToBoxAdapter(child: _buildSectionHeader('Daily Mixes', () {})),
         const SliverToBoxAdapter(child: SizedBox(height: 16)),
-        SliverToBoxAdapter(child: _buildDailyMixesSection()),
+        SliverToBoxAdapter(child: RepaintBoundary(child: _buildDailyMixesSection())),
         const SliverToBoxAdapter(child: SizedBox(height: 32)),
         SliverToBoxAdapter(
             child: _buildSectionHeader('New Discoveries', () {})),
         const SliverToBoxAdapter(child: SizedBox(height: 16)),
-        SliverToBoxAdapter(child: _buildNewDiscoveriesSection()),
+        SliverToBoxAdapter(child: RepaintBoundary(child: _buildNewDiscoveriesSection())),
         const SliverToBoxAdapter(child: SizedBox(height: 120)),
       ],
     );
@@ -1205,6 +1198,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       height: 200,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        cacheExtent: 350,
         padding: const EdgeInsets.symmetric(horizontal: 14),
         itemCount: validReleases.length,
         itemBuilder: (context, index) {
@@ -1608,6 +1603,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       height: 140,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        cacheExtent: 350,
         padding: const EdgeInsets.symmetric(horizontal: 14),
         itemCount: artists.length,
         itemBuilder: (context, index) {
@@ -1749,6 +1746,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
+        cacheExtent: 350,
         padding: const EdgeInsets.symmetric(horizontal: 16),
         itemCount: count,
         itemBuilder: (context, index) {
@@ -2203,6 +2201,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       height: 200,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        cacheExtent: 350,
         padding: const EdgeInsets.symmetric(horizontal: 14),
         itemCount: tracks.length,
         itemBuilder: (context, index) {

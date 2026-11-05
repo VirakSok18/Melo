@@ -115,7 +115,19 @@ class PlaybackService extends ChangeNotifier {
         } else {
           _handleCompletionAndAdvance();
         }
-      } else if (state.processingState == ProcessingState.idle &&
+      }
+      if (state.processingState == ProcessingState.buffering) {
+        _bufferingWatchdog?.cancel();
+        _bufferingWatchdog = Timer(const Duration(seconds: 25), () {
+          if (_isPlaying && !_isLoading) {
+            debugPrint('[Playback] Buffering timed out after 25s, recovering playback');
+            _handleSourceError();
+          }
+        });
+      } else {
+        _bufferingWatchdog?.cancel();
+      }
+      if (state.processingState == ProcessingState.idle &&
           !_isLoading &&
           _isPlaying) {
         // just_audio lands in idle on a source/network error mid-stream
@@ -128,6 +140,7 @@ class PlaybackService extends ChangeNotifier {
   }
 
   final AudioPlayer _audioPlayer = AudioPlayer();
+  Timer? _bufferingWatchdog;
 
   // This is deliberately the player's gain, not the device/media volume. It
   // lets Melo offer a consistent in-app volume control without changing the
@@ -683,15 +696,23 @@ class PlaybackService extends ChangeNotifier {
             track.title, track.artist);
         if (tempFilePath != null && generation == _playGeneration) {
           final mediaItem = _buildMediaItem(track);
-          await _audioPlayer
-              .setAudioSource(
-                AudioSource.file(tempFilePath, tag: mediaItem),
-                initialPosition: startPos,
-              )
-              .timeout(const Duration(seconds: 10));
-          await _finalizeTrackPlayback(track, generation,
-              initialPosition: startPos, armAutoCache: true, fromSync: fromSync);
-          return;
+          try {
+            await _audioPlayer
+                .setAudioSource(
+                  AudioSource.file(tempFilePath, tag: mediaItem),
+                  initialPosition: startPos,
+                )
+                .timeout(const Duration(seconds: 10));
+            await _finalizeTrackPlayback(track, generation,
+                initialPosition: startPos, armAutoCache: true, fromSync: fromSync);
+            return;
+          } catch (fileErr) {
+            debugPrint('[Playback] Corrupt temp file error: $fileErr. Deleting file.');
+            try {
+              final f = File(tempFilePath);
+              if (await f.exists()) await f.delete();
+            } catch (_) {}
+          }
         }
       } catch (tempError) {
         debugPrint('[Playback] Client temp file download error: $tempError');

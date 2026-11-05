@@ -2,8 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../view/premium_screen/premium_upsell_sheet.dart';
-import 'playback_service.dart';
 
 enum PremiumPlanType {
   free,
@@ -28,33 +26,24 @@ class PremiumService extends ChangeNotifier {
   static const String _keyAiGenerations = 'melo_ai_generations_count';
   static const String _keySkipTimestamps = 'melo_skip_timestamps';
 
-  PremiumPlanType _plan = PremiumPlanType.free;
+  PremiumPlanType _plan = PremiumPlanType.yearly;
   DateTime? _nextBillingDate;
   String? _cardLast4;
   String? _cardBrand;
   String? _cardExpiry;
   String? _cardHolder;
   bool _autoRenew = true;
-  bool _isLoaded = false;
+  bool _isLoaded = true;
   int _aiGenerationsCount = 0;
   List<int> _skipTimestamps = [];
 
   bool get isLoaded => _isLoaded;
-  PremiumPlanType get plan => _plan;
-  bool get isPremium {
-    if (_plan == PremiumPlanType.free) return false;
-    // Check if subscription period has ended
-    if (_nextBillingDate != null) {
-      if (DateTime.now().isAfter(_nextBillingDate!)) {
-        return false;
-      }
-    }
-    return true;
-  }
+  PremiumPlanType get plan => PremiumPlanType.yearly;
+  bool get isPremium => true;
 
-  bool get isYearly => _plan == PremiumPlanType.yearly && isPremium;
-  bool get isMonthly => _plan == PremiumPlanType.monthly && isPremium;
-  bool get isFree => !isPremium;
+  bool get isYearly => true;
+  bool get isMonthly => false;
+  bool get isFree => false;
   bool get autoRenew => _autoRenew;
   bool get hasCard => _cardLast4 != null && _cardLast4!.isNotEmpty;
   DateTime? get nextBillingDate => _nextBillingDate;
@@ -78,281 +67,55 @@ class PremiumService extends ChangeNotifier {
   String get cardExpiry => _cardExpiry ?? '';
   String get cardHolder => _cardHolder ?? '';
 
-  // Feature limits according to Business Plan
+  // Feature limits: fully free and unlimited
   int get aiGenerationsCount => _aiGenerationsCount;
-  bool get canGenerateAiPlaylist => isPremium || _aiGenerationsCount < 2;
-  int get remainingAiTrials =>
-      isPremium ? 999 : (2 - _aiGenerationsCount).clamp(0, 2);
+  bool get canGenerateAiPlaylist => true;
+  int get remainingAiTrials => 999;
 
-  bool get canDownloadOffline => isPremium;
-  bool get canSyncListenAlong => isPremium;
+  bool get canDownloadOffline => true;
+  bool get canSyncListenAlong => true;
 
-  int get skipsInLastHour {
-    final cutoff = DateTime.now().millisecondsSinceEpoch - 3600000;
-    return _skipTimestamps.where((t) => t >= cutoff).length;
-  }
+  int get skipsInLastHour => 0;
 
-  bool get canSkipTrack => isPremium || skipsInLastHour < 6;
-  int get remainingHourlySkips =>
-      isPremium ? 999 : (6 - skipsInLastHour).clamp(0, 6);
+  bool get canSkipTrack => true;
+  int get remainingHourlySkips => 999;
 
   /// Checks if an on-demand track switch is allowed:
-  /// - If user is Premium -> always true
-  /// - If player is idle / no track playing -> always true (free session start)
-  /// - If user is actively playing a track and picking a NEW track:
-  ///   - If skips available -> records 1 skip and returns true
-  ///   - If skips exhausted -> shows Premium upsell sheet and returns false
+  /// Fully free: Always returns true for unlimited on-demand playback and skips.
   bool checkAndConsumeTrackSwitch(
     BuildContext context, {
     String? newTitle,
     String? newArtist,
     String? newId,
   }) {
-    if (isPremium) return true;
-
-    // Check if player is currently active
-    final playback = PlaybackService();
-    final current = playback.currentTrack;
-
-    // If nothing is playing or re-triggering the same song, no skip is used
-    if (current == null) {
-      return true;
-    }
-
-    final isSameSong =
-        (newId != null && newId.isNotEmpty && current.id == newId) ||
-            (newTitle != null &&
-                newTitle.isNotEmpty &&
-                current.title.toLowerCase() == newTitle.toLowerCase() &&
-                (newArtist == null ||
-                    newArtist.isEmpty ||
-                    current.artist.toLowerCase() == newArtist.toLowerCase()));
-
-    if (isSameSong) {
-      return true;
-    }
-
-    // Actively interrupting the current track -> requires an hourly skip
-    if (!canSkipTrack) {
-      PremiumService.showUpsell(
-        context,
-        reason:
-            "You've used all 6 skips this hour. Upgrade to Melo Premium for unlimited on-demand song skips.",
-        feature: 'Unlimited On-Demand Skips',
-      );
-      return false;
-    }
-
-    recordSkip();
     return true;
   }
 
-  String get planName {
-    if (!isPremium) return 'Free Tier';
-    switch (_plan) {
-      case PremiumPlanType.yearly:
-        return '1 Year Pro Pass';
-      case PremiumPlanType.monthly:
-        return '1 Month Pro Pass';
-      case PremiumPlanType.free:
-        return 'Free Tier';
-    }
-  }
+  String get planName => 'Pro Pass';
 
-  String get planPrice {
-    switch (_plan) {
-      case PremiumPlanType.yearly:
-        return '\$24.99 (1 Year)';
-      case PremiumPlanType.monthly:
-        return '\$2.99 (30 Days)';
-      case PremiumPlanType.free:
-        return '\$0.00';
-    }
-  }
+  String get planPrice => 'Free';
 
-  String get billingPeriod {
-    switch (_plan) {
-      case PremiumPlanType.yearly:
-        return '1 Year (365 Days)';
-      case PremiumPlanType.monthly:
-        return '1 Month (30 Days)';
-      case PremiumPlanType.free:
-        return 'Free Tier';
-    }
-  }
+  String get billingPeriod => 'Unlimited';
 
-  String get formattedNextBillingDate {
-    if (_nextBillingDate == null) {
-      final now = DateTime.now();
-      final target = _plan == PremiumPlanType.yearly
-          ? DateTime(now.year + 1, now.month, now.day)
-          : DateTime(now.year, now.month + 1, now.day);
-      return _formatDate(target);
-    }
-    return _formatDate(_nextBillingDate!);
-  }
-
-  String _formatDate(DateTime date) {
-    const months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec'
-    ];
-    return '${months[date.month - 1]} ${date.day}, ${date.year}';
-  }
-
-  RealtimeChannel? _subscriptionChannel;
-  Timer? _pollTimer;
+  String get formattedNextBillingDate => 'Unlimited';
 
   Future<void> init() async {
-    await _loadState();
-    await fetchRemoteSubscription();
-    _subscribeToSubscriptionChanges();
-    _startPolling();
-  }
-
-  void _startPolling() {
-    _pollTimer?.cancel();
-    // Polls Supabase every 4 seconds in the foreground as a reliable fallback
-    _pollTimer = Timer.periodic(const Duration(seconds: 4), (_) {
-      fetchRemoteSubscription();
-    });
-  }
-
-  void _subscribeToSubscriptionChanges() {
-    final user = Supabase.instance.client.auth.currentUser;
-    if (user == null) return;
-
-    _subscriptionChannel?.unsubscribe();
-    _subscriptionChannel = Supabase.instance.client
-        .channel('user_subscriptions_realtime_${user.id}')
-        .onPostgresChanges(
-          event: PostgresChangeEvent.all,
-          schema: 'public',
-          table: 'user_subscriptions',
-          callback: (payload) {
-            debugPrint(
-                '[PremiumService] Realtime subscription event (${payload.eventType}): ${payload.newRecord}');
-            fetchRemoteSubscription();
-          },
-        )
-        .subscribe();
+    _plan = PremiumPlanType.yearly;
+    _isLoaded = true;
+    notifyListeners();
   }
 
   Future<void> _loadState() async {
-    final prefs = await SharedPreferences.getInstance();
-    final planStr = prefs.getString(_keyPlan);
-    if (planStr == 'yearly') {
-      _plan = PremiumPlanType.yearly;
-    } else if (planStr == 'monthly') {
-      _plan = PremiumPlanType.monthly;
-    } else {
-      _plan = PremiumPlanType.free;
-    }
-
-    final billingMs = prefs.getInt(_keyNextBilling);
-    if (billingMs != null) {
-      _nextBillingDate = DateTime.fromMillisecondsSinceEpoch(billingMs);
-    }
-
-    _cardLast4 = prefs.getString(_keyCardLast4);
-    _cardBrand = prefs.getString(_keyCardBrand);
-    _cardExpiry = prefs.getString(_keyCardExpiry);
-    _cardHolder = prefs.getString(_keyCardHolder);
-    _autoRenew = prefs.getBool(_keyAutoRenew) ?? true;
-    _aiGenerationsCount = prefs.getInt(_keyAiGenerations) ?? 0;
-
-    final skipListStr = prefs.getStringList(_keySkipTimestamps) ?? [];
-    _skipTimestamps = skipListStr
-        .map((e) => int.tryParse(e) ?? 0)
-        .where((t) => t > 0)
-        .toList();
-
+    _plan = PremiumPlanType.yearly;
     _isLoaded = true;
     notifyListeners();
   }
 
   /// Syncs subscription state from Supabase when user logs in
   Future<void> fetchRemoteSubscription() async {
-    final user = Supabase.instance.client.auth.currentUser;
-    if (user == null) return;
-
-    try {
-      final res = await Supabase.instance.client
-          .from('user_subscriptions')
-          .select()
-          .eq('user_id', user.id)
-          .maybeSingle()
-          .timeout(const Duration(seconds: 8));
-
-      if (res != null) {
-        final planStr = res['plan'] as String? ?? 'free';
-        if (planStr == 'yearly') {
-          _plan = PremiumPlanType.yearly;
-        } else if (planStr == 'monthly') {
-          _plan = PremiumPlanType.monthly;
-        } else {
-          _plan = PremiumPlanType.free;
-        }
-
-        final nextBillingStr = res['next_billing_date'] as String?;
-        if (nextBillingStr != null) {
-          _nextBillingDate = DateTime.tryParse(nextBillingStr);
-        }
-
-        _cardBrand = res['card_brand'] as String?;
-        _cardLast4 = res['card_last4'] as String?;
-        _cardExpiry = res['card_expiry'] as String?;
-        _cardHolder = res['card_holder'] as String?;
-        _autoRenew = res['auto_renew'] as bool? ?? true;
-
-        // Update local SharedPreferences
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString(_keyPlan, planStr);
-        if (_nextBillingDate != null) {
-          await prefs.setInt(
-              _keyNextBilling, _nextBillingDate!.millisecondsSinceEpoch);
-        } else {
-          await prefs.remove(_keyNextBilling);
-        }
-        if (_cardBrand != null) {
-          await prefs.setString(_keyCardBrand, _cardBrand!);
-        }
-        if (_cardLast4 != null) {
-          await prefs.setString(_keyCardLast4, _cardLast4!);
-        }
-        if (_cardExpiry != null) {
-          await prefs.setString(_keyCardExpiry, _cardExpiry!);
-        }
-        if (_cardHolder != null) {
-          await prefs.setString(_keyCardHolder, _cardHolder!);
-        }
-        await prefs.setBool(_keyAutoRenew, _autoRenew);
-
-        notifyListeners();
-      } else {
-        // If row was deleted in Supabase, revert to free
-        _plan = PremiumPlanType.free;
-        _nextBillingDate = null;
-        _autoRenew = false;
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString(_keyPlan, 'free');
-        await prefs.remove(_keyNextBilling);
-        await prefs.setBool(_keyAutoRenew, false);
-        notifyListeners();
-      }
-    } catch (e) {
-      debugPrint('[PremiumService] Error fetching remote subscription: $e');
-    }
+    // Melo is fully free
+    _plan = PremiumPlanType.yearly;
+    notifyListeners();
   }
 
   Future<void> _syncToSupabase() async {
@@ -367,7 +130,7 @@ class PremiumService extends ChangeNotifier {
       await Supabase.instance.client.from('user_subscriptions').upsert({
         'user_id': user.id,
         'plan': planStr,
-        'status': _plan != PremiumPlanType.free ? 'active' : 'free',
+        'status': 'active',
         'card_brand': _cardBrand,
         'card_last4': _cardLast4,
         'card_expiry': _cardExpiry,
@@ -412,7 +175,6 @@ class PremiumService extends ChangeNotifier {
     _plan = newPlan;
     final now = DateTime.now();
 
-    // If user currently has active remaining days, stack/extend from existing expiry date
     final baseDate =
         (_nextBillingDate != null && _nextBillingDate!.isAfter(now))
             ? _nextBillingDate!
@@ -447,7 +209,6 @@ class PremiumService extends ChangeNotifier {
 
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_keyAutoRenew, false);
-
     notifyListeners();
     await _syncToSupabase();
   }
@@ -499,7 +260,7 @@ class PremiumService extends ChangeNotifier {
 
   /// Clears local user premium state upon sign out
   Future<void> clearLocalState() async {
-    _plan = PremiumPlanType.free;
+    _plan = PremiumPlanType.yearly;
     _nextBillingDate = null;
     _cardLast4 = null;
     _cardBrand = null;
@@ -526,10 +287,6 @@ class PremiumService extends ChangeNotifier {
   /// Convenience method to show a compact premium upsell sheet
   static void showUpsell(BuildContext context,
       {String? reason, String? feature}) {
-    PremiumUpsellSheet.show(
-      context,
-      reason: reason,
-      feature: feature,
-    );
+    // No-op: App is completely free with no payment blocks.
   }
 }

@@ -1,21 +1,23 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/painting.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'search_service.dart';
 import 'download_service.dart';
 import 'deezer_service.dart';
+import '../widgets/cached_image.dart';
 
 /// Invisible phone-side cache of played songs (Spotify-style). Every song the
 /// user actually listens to (>45s or to completion) is silently saved to a
 /// dedicated folder, so replaying it later — from any section or search — is
-/// instant and works fully offline. It never appears in the Downloads tab or
-/// any other UI, and it is a separate system from explicit downloads: the
-/// auto-cache pool has its own 5GB LRU cap, while explicit downloads are never
-/// evicted automatically.
+/// instant and works fully offline.
+///
+/// Features an automatic 1.5 GB LRU cap, atomic write protection against
+/// app crashes / power loss, and deep temp file cleaning.
 class AutoCacheService {
-  static const int _maxSizeBytes = 5 * 1024 * 1024 * 1024; // 5 GB
+  static const int _maxSizeBytes = 1536 * 1024 * 1024; // 1.5 GB LRU cap
 
   static List<Map<String, dynamic>> _index = [];
   static Directory? _cacheDir;
@@ -40,6 +42,7 @@ class AutoCacheService {
     if (user != null) {
       await _loadIndex(user);
     }
+    unawaited(cleanOrphanedAndCorruptFiles());
   }
 
   static Future<void> _loadIndex(String userId) async {
@@ -85,8 +88,12 @@ class AutoCacheService {
         continue;
       }
       final path = '${dir.path}/$trackId.mp3';
-      if (!File(path).existsSync()) {
+      final f = File(path);
+      if (!f.existsSync() || f.lengthSync() < 300000) {
         toRemove.add(trackId);
+        try {
+          if (f.existsSync()) f.deleteSync();
+        } catch (_) {}
       }
     }
     if (toRemove.isNotEmpty) {
@@ -108,7 +115,8 @@ class AutoCacheService {
     final file = File(path);
     if (!file.existsSync()) return null;
     try {
-      if (file.lengthSync() < 50000) {
+      // Audio tracks smaller than 300 KB are corrupted or interrupted downloads
+      if (file.lengthSync() < 300000) {
         file.deleteSync();
         _index.removeWhere((s) => s['trackId'] == trackId);
         _scheduleIndexSave();
@@ -146,8 +154,7 @@ class AutoCacheService {
     _scheduleIndexSave();
   }
 
-  /// Serialized, fire-and-forget background download. Cached songs are saved
-  /// only to the auto-cache folder and never surface anywhere in the UI.
+  /// Serialized, fire-and-forget background download.
   static Future<void> cacheTrack(SearchResult track) async {
     final user = _userId();
     if (user == null) return;
@@ -181,7 +188,7 @@ class AutoCacheService {
 
       final dir = await _getCacheDir();
       final file = File('${dir.path}/${track.id}.mp3');
-      if (await file.exists() && await file.length() > 0) {
+      if (await file.exists() && await file.length() >= 300000) {
         _index.insert(0, {
           'trackId': track.id,
           'title': track.title,
@@ -195,9 +202,6 @@ class AutoCacheService {
         return;
       }
 
-      // Client-side Deezer download — no backend. Resolve the Deezer track ID
-      // (search results already carry it; YouTube-sourced tracks get matched
-      // by title/artist), then CDN URL → download → Blowfish decrypt.
       final resolvedId = int.tryParse(track.id) != null
           ? track.id
           : await DeezerService.searchTrackId(track.title, track.artist);
@@ -210,9 +214,18 @@ class AutoCacheService {
         cdnUrl: cdnUrl,
         trackId: resolvedId,
       );
-      if (audio == null || audio.isEmpty) return;
+      if (audio == null || audio.length < 300000) return;
 
-      await file.writeAsBytes(audio);
+      // Write atomically to .tmp file first to prevent corruption on sudden app close or battery death
+      final tmpFile = File('${file.path}.tmp');
+      await tmpFile.writeAsBytes(audio, flush: true);
+      if (await file.exists()) {
+        try {
+          await file.delete();
+        } catch (_) {}
+      }
+      await tmpFile.rename(file.path);
+
       _index.insert(0, {
         'trackId': track.id,
         'title': track.title,
@@ -277,20 +290,138 @@ class AutoCacheService {
 
   static int get count => _index.length;
 
+  /// Calculates total real disk space consumed across:
+  /// 1. Autocached songs folder
+  /// 2. Temporary audio files
+  /// 3. Cached images folder
+  static Future<int> calculateDiskUsage() async {
+    int total = 0;
+    try {
+      final appDir = await getApplicationDocumentsDirectory();
+      final autoCacheDir = Directory('${appDir.path}/autocache');
+      if (await autoCacheDir.exists()) {
+        await for (final entity in autoCacheDir.list(recursive: false)) {
+          if (entity is File && !entity.path.endsWith('.json')) {
+            total += await entity.length();
+          }
+        }
+      }
+
+      final tempDir = await getTemporaryDirectory();
+      if (await tempDir.exists()) {
+        await for (final entity in tempDir.list(recursive: false)) {
+          if (entity is File) {
+            final name = entity.uri.pathSegments.last;
+            if (name.startsWith('yt_') ||
+                name.startsWith('deezer_') ||
+                name.endsWith('.mp3') ||
+                name.endsWith('.webm') ||
+                name.endsWith('.tmp')) {
+              total += await entity.length();
+            }
+          }
+        }
+      }
+
+      total += await CachedImageStore.getDiskUsage();
+    } catch (_) {}
+    return total;
+  }
+
+  /// Automatically purges corrupted, partial (<300KB), or .tmp files from previous sessions
+  static Future<void> cleanOrphanedAndCorruptFiles() async {
+    try {
+      final dir = await _getCacheDir();
+      if (await dir.exists()) {
+        await for (final entity in dir.list(recursive: false)) {
+          if (entity is File) {
+            final name = entity.uri.pathSegments.last;
+            if (name.endsWith('.tmp')) {
+              try {
+                await entity.delete();
+              } catch (_) {}
+            } else if (name.endsWith('.mp3') && await entity.length() < 300000) {
+              try {
+                await entity.delete();
+              } catch (_) {}
+            }
+          }
+        }
+      }
+
+      final tempDir = await getTemporaryDirectory();
+      if (await tempDir.exists()) {
+        final now = DateTime.now();
+        await for (final entity in tempDir.list(recursive: false)) {
+          if (entity is File) {
+            final name = entity.uri.pathSegments.last;
+            if (name.endsWith('.tmp')) {
+              try {
+                await entity.delete();
+              } catch (_) {}
+            } else if (name.startsWith('yt_') || name.startsWith('deezer_')) {
+              try {
+                final stat = await entity.stat();
+                if (stat.size < 300000 || now.difference(stat.modified).inHours > 24) {
+                  await entity.delete();
+                }
+              } catch (_) {}
+            }
+          }
+        }
+      }
+    } catch (_) {}
+  }
+
+  /// Thoroughly purges all playback caches, temp files, and image caches from device
   static Future<void> clearCache() async {
     _index.clear();
+    final user = _userId();
+    if (user != null) {
+      await _saveIndex(user);
+    }
+
     try {
+      // 1. Clear autocache audio files
       final appDir = await getApplicationDocumentsDirectory();
       final dir = Directory('${appDir.path}/autocache');
       if (await dir.exists()) {
         await for (final entity in dir.list()) {
           try {
-            await entity.delete(recursive: true);
+            if (entity is File && !entity.path.endsWith('.json')) {
+              await entity.delete();
+            }
           } catch (e) {
-            print('AutoCache clear error: $e');
+            print('AutoCache clear file error: $e');
           }
         }
       }
+
+      // 2. Clear temp audio files
+      final tempDir = await getTemporaryDirectory();
+      if (await tempDir.exists()) {
+        await for (final entity in tempDir.list()) {
+          if (entity is File) {
+            final name = entity.uri.pathSegments.last;
+            if (name.startsWith('yt_') ||
+                name.startsWith('deezer_') ||
+                name.endsWith('.mp3') ||
+                name.endsWith('.webm') ||
+                name.endsWith('.tmp')) {
+              try {
+                await entity.delete();
+              } catch (_) {}
+            }
+          }
+        }
+      }
+
+      // 3. Clear image cache on disk
+      await CachedImageStore.clearCache();
+
+      // 4. Evict Flutter in-memory decoded image bitmaps to free RAM
+      PaintingBinding.instance.imageCache.clear();
+      PaintingBinding.instance.imageCache.clearLiveImages();
     } catch (e) {
       print('AutoCache clear dir error: $e');
     }

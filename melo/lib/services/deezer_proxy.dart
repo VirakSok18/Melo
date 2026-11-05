@@ -252,9 +252,26 @@ class DeezerProxy {
     int blockIndex = 0;
     Uint8List remainder = Uint8List(0);
     final completer = Completer<void>();
+    StreamSubscription? sub;
+    bool isClosed = false;
 
-    streamedResponse.stream.listen(
+    void cleanup() {
+      if (isClosed) return;
+      isClosed = true;
+      sub?.cancel().catchError((_) {});
+      client.close();
+      try {
+        request.response.close();
+      } catch (_) {}
+      if (!completer.isCompleted) completer.complete();
+    }
+
+    // Client disconnected (e.g. track change, paused, screen locked, app killed)
+    request.response.done.then((_) => cleanup()).catchError((_) => cleanup());
+
+    sub = streamedResponse.stream.listen(
       (chunk) {
+        if (isClosed) return;
         final data = remainder.isNotEmpty
             ? Uint8List.fromList([...remainder, ...chunk])
             : Uint8List.fromList(chunk);
@@ -266,7 +283,8 @@ class DeezerProxy {
           try {
             request.response.add(decrypted);
           } catch (_) {
-            // Client closed connection (e.g. skip track)
+            // Client closed connection - release all resources immediately
+            cleanup();
             return;
           }
           offset += _blockSize;
@@ -276,25 +294,17 @@ class DeezerProxy {
         remainder = data.sublist(offset);
       },
       onDone: () async {
-        if (remainder.isNotEmpty) {
+        if (!isClosed && remainder.isNotEmpty) {
           final decrypted = _decryptBlock(bf, remainder, blockIndex);
           try {
             request.response.add(decrypted);
           } catch (_) {}
         }
-        client.close();
-        try {
-          await request.response.close();
-        } catch (_) {}
-        if (!completer.isCompleted) completer.complete();
+        cleanup();
       },
-      onError: (e) async {
-        print('[DeezerProxy] CDN stream error: $e');
-        client.close();
-        try {
-          await request.response.close();
-        } catch (_) {}
-        if (!completer.isCompleted) completer.complete();
+      onError: (e) {
+        print('[DeezerProxy] CDN stream error: ');
+        cleanup();
       },
       cancelOnError: true,
     );

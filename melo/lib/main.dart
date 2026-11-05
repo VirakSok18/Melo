@@ -12,6 +12,7 @@ import 'services/artist_follow_service.dart';
 import 'services/profile_follow_service.dart';
 import 'services/presence_service.dart';
 import 'services/auto_cache_service.dart';
+import 'services/client_stream_service.dart';
 import 'services/generated_history_service.dart';
 import 'services/profile_service.dart';
 import 'services/deezer_proxy.dart';
@@ -32,12 +33,16 @@ void main() async {
   await JustAudioBackground.init(
     androidNotificationChannelId: 'com.example.melo.channel.audio',
     androidNotificationChannelName: 'Melo Audio Playback',
-    androidNotificationOngoing: false,
+    androidNotificationOngoing: true,
     androidStopForegroundOnPause: false,
     androidShowNotificationBadge: true,
     androidNotificationIcon: 'mipmap/ic_launcher',
     notificationColor: const Color(0xFF514AED),
   );
+
+  // Optimize image cache to prevent hitching and memory thrashing during scrolling
+  PaintingBinding.instance.imageCache.maximumSize = 300;
+  PaintingBinding.instance.imageCache.maximumSizeBytes = 150 * 1024 * 1024;
 
   await SecureStorageService.init();
 
@@ -75,6 +80,8 @@ Future<void> _runBackgroundInit() async {
     DeezerProxy.instance.ensureRunning();
     DeezerService.warmupAuth();
     PlaybackService().restoreLastPlaybackState();
+    AutoCacheService.init();
+    ClientStreamService.cleanStaleTempFiles();
 
     // Keep local session intact; do not sign out automatically on transient network/auth errors.
     // The user should only ever be signed out when they explicitly choose to.

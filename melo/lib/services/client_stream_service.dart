@@ -64,6 +64,7 @@ class ClientStreamService {
   }
 
   /// Download audio stream directly on device to a local temp file for smooth, zero-error playback.
+  /// Download audio stream directly on device to a local temp file for smooth, zero-error playback.
   static Future<String?> downloadAudioToTempFile(
     String title,
     String artist, {
@@ -77,27 +78,61 @@ class ClientStreamService {
       final file =
           File('${tempDir.path}/yt_${audio.videoId}.${audio.container}');
 
-      // If file already exists and is non-empty, use it immediately
-      if (await file.exists() && await file.length() > 50000) {
-        print(
-            '[ClientStream] ⚡ Reusing local audio file: ${file.path} (${await file.length()} bytes)');
-        return file.path;
+      // If complete file already exists (> 300KB), use it immediately
+      if (await file.exists()) {
+        final len = await file.length();
+        if (len > 300000) {
+          return file.path;
+        } else {
+          // Incomplete stub from an interrupted download - delete it
+          try { await file.delete(); } catch (_) {}
+        }
       }
 
-      final sink = file.openWrite();
+      // Download into an isolated .tmp file first so interrupted sessions never leave corrupt audio
+      final tmpFile = File('${file.path}.tmp');
+      final sink = tmpFile.openWrite();
       await sink.addStream(audio.byteStream);
       await sink.flush();
       await sink.close();
 
-      if (await file.exists() && await file.length() > 0) {
-        print(
-            '[ClientStream] ⚡ Downloaded audio to file: ${file.path} (${await file.length()} bytes)');
+      if (await tmpFile.exists() && (await tmpFile.length()) > 300000) {
+        if (await file.exists()) {
+          try { await file.delete(); } catch (_) {}
+        }
+        await tmpFile.rename(file.path);
         return file.path;
+      } else {
+        if (await tmpFile.exists()) {
+          try { await tmpFile.delete(); } catch (_) {}
+        }
       }
     } catch (e) {
       print('[ClientStream] Error saving audio to temp file: $e');
     }
     return null;
+  }
+
+  /// Automatically purges stale temp audio files, partial downloads, and files older than 24 hours
+  static Future<void> cleanStaleTempFiles() async {
+    try {
+      final tempDir = await getTemporaryDirectory();
+      if (!await tempDir.exists()) return;
+      final now = DateTime.now();
+      await for (final entity in tempDir.list()) {
+        if (entity is File) {
+          final name = entity.uri.pathSegments.last;
+          if (name.endsWith('.tmp') || name.startsWith('yt_') || name.startsWith('deezer_')) {
+            try {
+              final stat = await entity.stat();
+              if (name.endsWith('.tmp') || stat.size < 300000 || now.difference(stat.modified).inHours > 24) {
+                await entity.delete();
+              }
+            } catch (_) {}
+          }
+        }
+      }
+    } catch (_) {}
   }
 
   /// Resolve a direct playable stream URL from YouTube on device

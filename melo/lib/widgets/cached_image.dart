@@ -202,15 +202,37 @@ class _CachedImageState extends State<CachedImage> {
     }
 
     final file = _file;
-    if (file != null && file.existsSync()) {
+    if (file != null) {
+      final pixelRatio = MediaQuery.maybeDevicePixelRatioOf(context) ?? 2.0;
+      final targetWidth = widget.width != null
+          ? (widget.width! * pixelRatio).round()
+          : null;
+      final targetHeight = widget.height != null
+          ? (widget.height! * pixelRatio).round()
+          : null;
+
       return Image.file(
         file,
         width: widget.width,
         height: widget.height,
+        cacheWidth: targetWidth,
+        cacheHeight: targetHeight,
         fit: widget.fit,
         alignment: widget.alignment,
         filterQuality: widget.filterQuality,
-        errorBuilder: widget.errorBuilder,
+        gaplessPlayback: true,
+        errorBuilder: (ctx, err, stack) {
+          CachedImageStore.evict(widget.imageUrl.trim());
+          if (widget.errorBuilder != null) {
+            return widget.errorBuilder!(ctx, err, stack);
+          }
+          return widget.placeholder ??
+              Container(
+                width: widget.width,
+                height: widget.height,
+                color: const Color(0xFF2A2A2A),
+              );
+        },
       );
     }
 
@@ -233,7 +255,49 @@ class CachedImageStore {
   static File? memFileFor(String url) => _memCache[url];
 
   static void rememberFile(String url, File file) {
+    if (_memCache.length > 300) {
+      _memCache.remove(_memCache.keys.first);
+    }
     _memCache[url] = file;
+  }
+
+  static void evict(String url) {
+    _memCache.remove(url);
+    if (_dir != null) {
+      try {
+        final f = File('${_dir!.path}/${_hash(url)}.img');
+        if (f.existsSync()) f.deleteSync();
+      } catch (_) {}
+    }
+  }
+
+  static Future<void> clearCache() async {
+    _memCache.clear();
+    try {
+      final dir = await _getDir();
+      if (await dir.exists()) {
+        await for (final entity in dir.list()) {
+          try {
+            await entity.delete();
+          } catch (_) {}
+        }
+      }
+    } catch (_) {}
+  }
+
+  static Future<int> getDiskUsage() async {
+    int total = 0;
+    try {
+      final dir = await _getDir();
+      if (await dir.exists()) {
+        await for (final entity in dir.list()) {
+          if (entity is File) {
+            total += await entity.length();
+          }
+        }
+      }
+    } catch (_) {}
+    return total;
   }
 
   static Future<Directory> _getDir() async {
