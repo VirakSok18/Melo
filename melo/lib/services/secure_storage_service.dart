@@ -44,7 +44,10 @@ class SecureStorageService {
       await _storage.write(key: groqApiKey, value: _envGroqKey);
     } else {
       final groqKey = await _storage.read(key: groqApiKey);
-      if ((groqKey == null || groqKey.isEmpty) && defaultGroqKey.isNotEmpty) {
+      if (groqKey != null &&
+          (groqKey.startsWith('gsk_RCc') || groqKey.startsWith('gsk_je9'))) {
+        await _storage.delete(key: groqApiKey);
+      } else if ((groqKey == null || groqKey.isEmpty) && defaultGroqKey.isNotEmpty) {
         await _storage.write(key: groqApiKey, value: defaultGroqKey);
       }
     }
@@ -66,7 +69,14 @@ class SecureStorageService {
 
     final value = await _storage.read(key: key);
     if (key == deezerArlKey) return (value != null && value.isNotEmpty) ? value : defaultDeezerArl;
-    if (key == groqApiKey) return (value != null && value.isNotEmpty) ? value : defaultGroqKey;
+    if (key == groqApiKey) {
+      if (value != null &&
+          (value.startsWith('gsk_RCc') || value.startsWith('gsk_je9'))) {
+        await _storage.delete(key: groqApiKey);
+        return defaultGroqKey;
+      }
+      return (value != null && value.isNotEmpty) ? value : defaultGroqKey;
+    }
     if (key == geminiApiKey) return (value != null && value.isNotEmpty) ? value : defaultGeminiKey;
     return value ?? '';
   }

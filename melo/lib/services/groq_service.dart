@@ -98,7 +98,7 @@ class PromptIntent {
 
 class GroqService {
   static const _apiUrl = 'https://api.groq.com/openai/v1/chat/completions';
-  static const _model = 'openai/gpt-oss-120b';
+  static const _model = 'qwen/qwen3.8-27b';
 
   static const _deconstructSystemPrompt =
       r'''You are the world-class Music Intent & Semantic Deconstruction Engine for Melo.
