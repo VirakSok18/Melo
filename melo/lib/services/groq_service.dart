@@ -273,7 +273,8 @@ Output ONLY valid JSON:
               Uri.parse(_apiUrl),
               headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer $apiKey',
+                'Authorization': 'Bearer ${apiKey.trim()}',
+                'User-Agent': 'Mozilla/5.0 (Linux; Android) Melo/1.0',
               },
               body: jsonEncode(bodyMap),
             )
@@ -357,7 +358,8 @@ Output ONLY valid JSON:
               Uri.parse(_apiUrl),
               headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer $apiKey',
+                'Authorization': 'Bearer ${apiKey.trim()}',
+                'User-Agent': 'Mozilla/5.0 (Linux; Android) Melo/1.0',
               },
               body: jsonEncode(bodyMap),
             )
@@ -454,7 +456,8 @@ Output ONLY valid JSON:
               Uri.parse(_apiUrl),
               headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer $apiKey',
+                'Authorization': 'Bearer ${apiKey.trim()}',
+                'User-Agent': 'Mozilla/5.0 (Linux; Android) Melo/1.0',
               },
               body: jsonEncode(bodyMap),
             )
@@ -557,7 +560,8 @@ Output ONLY valid JSON:
               Uri.parse(_apiUrl),
               headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer $apiKey',
+                'Authorization': 'Bearer ${apiKey.trim()}',
+                'User-Agent': 'Mozilla/5.0 (Linux; Android) Melo/1.0',
               },
               body: jsonEncode({
                 'model': _model,

@@ -1,8 +1,12 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class SecureStorageService {
   static const _storage = FlutterSecureStorage(
-    aOptions: AndroidOptions(encryptedSharedPreferences: true),
+    aOptions: AndroidOptions(
+      encryptedSharedPreferences: true,
+      resetOnError: true,
+    ),
   );
 
   static const String deezerArlKey = 'deezer_arl';
@@ -31,62 +35,82 @@ class SecureStorageService {
 
   /// Initialize secure storage with defaults on first launch.
   static Future<void> init() async {
-    if (_envDeezerArl.isNotEmpty) {
-      await _storage.write(key: deezerArlKey, value: _envDeezerArl);
-    } else {
-      final arl = await _storage.read(key: deezerArlKey);
-      if ((arl == null || arl.isEmpty) && defaultDeezerArl.isNotEmpty) {
-        await _storage.write(key: deezerArlKey, value: defaultDeezerArl);
+    try {
+      if (_envDeezerArl.isNotEmpty) {
+        await _storage.write(key: deezerArlKey, value: _envDeezerArl);
+      } else {
+        final arl = await _storage.read(key: deezerArlKey);
+        if ((arl == null || arl.isEmpty) && defaultDeezerArl.isNotEmpty) {
+          await _storage.write(key: deezerArlKey, value: defaultDeezerArl);
+        }
       }
-    }
 
-    if (_envGroqKey.isNotEmpty) {
-      await _storage.write(key: groqApiKey, value: _envGroqKey);
-    } else {
-      final groqKey = await _storage.read(key: groqApiKey);
-      if (groqKey != null &&
-          (groqKey.startsWith('gsk_RCc') || groqKey.startsWith('gsk_je9'))) {
-        await _storage.delete(key: groqApiKey);
-      } else if ((groqKey == null || groqKey.isEmpty) && defaultGroqKey.isNotEmpty) {
-        await _storage.write(key: groqApiKey, value: defaultGroqKey);
+      if (_envGroqKey.isNotEmpty) {
+        await _storage.write(key: groqApiKey, value: _envGroqKey);
+      } else {
+        final groqKey = await _storage.read(key: groqApiKey);
+        if (groqKey != null &&
+            (groqKey.startsWith('gsk_RCc') || groqKey.startsWith('gsk_je9'))) {
+          await _storage.delete(key: groqApiKey);
+        } else if ((groqKey == null || groqKey.isEmpty) && defaultGroqKey.isNotEmpty) {
+          await _storage.write(key: groqApiKey, value: defaultGroqKey);
+        }
       }
-    }
 
-    if (_envGeminiKey.isNotEmpty) {
-      await _storage.write(key: geminiApiKey, value: _envGeminiKey);
-    } else {
-      final geminiKey = await _storage.read(key: geminiApiKey);
-      if ((geminiKey == null || geminiKey.isEmpty) && defaultGeminiKey.isNotEmpty) {
-        await _storage.write(key: geminiApiKey, value: defaultGeminiKey);
+      if (_envGeminiKey.isNotEmpty) {
+        await _storage.write(key: geminiApiKey, value: _envGeminiKey);
+      } else {
+        final geminiKey = await _storage.read(key: geminiApiKey);
+        if ((geminiKey == null || geminiKey.isEmpty) && defaultGeminiKey.isNotEmpty) {
+          await _storage.write(key: geminiApiKey, value: defaultGeminiKey);
+        }
       }
+    } catch (e) {
+      debugPrint('[SecureStorageService] init error: $e');
     }
   }
 
   static Future<String> read(String key) async {
-    if (key == groqApiKey && _envGroqKey.isNotEmpty) return _envGroqKey;
-    if (key == geminiApiKey && _envGeminiKey.isNotEmpty) return _envGeminiKey;
-    if (key == deezerArlKey && _envDeezerArl.isNotEmpty) return _envDeezerArl;
+    if (key == groqApiKey && _envGroqKey.isNotEmpty) return _envGroqKey.trim();
+    if (key == geminiApiKey && _envGeminiKey.isNotEmpty) return _envGeminiKey.trim();
+    if (key == deezerArlKey && _envDeezerArl.isNotEmpty) return _envDeezerArl.trim();
 
-    final value = await _storage.read(key: key);
-    if (key == deezerArlKey) return (value != null && value.isNotEmpty) ? value : defaultDeezerArl;
-    if (key == groqApiKey) {
-      if (value != null &&
-          (value.startsWith('gsk_RCc') || value.startsWith('gsk_je9'))) {
-        await _storage.delete(key: groqApiKey);
-        return defaultGroqKey;
+    try {
+      final value = await _storage.read(key: key);
+      if (key == deezerArlKey) return (value != null && value.isNotEmpty) ? value.trim() : defaultDeezerArl.trim();
+      if (key == groqApiKey) {
+        if (value != null &&
+            (value.startsWith('gsk_RCc') || value.startsWith('gsk_je9'))) {
+          await _storage.delete(key: groqApiKey);
+          return defaultGroqKey.trim();
+        }
+        return (value != null && value.isNotEmpty) ? value.trim() : defaultGroqKey.trim();
       }
-      return (value != null && value.isNotEmpty) ? value : defaultGroqKey;
+      if (key == geminiApiKey) return (value != null && value.isNotEmpty) ? value.trim() : defaultGeminiKey.trim();
+      return value?.trim() ?? '';
+    } catch (e) {
+      debugPrint('[SecureStorageService] read error for $key: $e');
+      if (key == groqApiKey) return defaultGroqKey.trim();
+      if (key == geminiApiKey) return defaultGeminiKey.trim();
+      if (key == deezerArlKey) return defaultDeezerArl.trim();
+      return '';
     }
-    if (key == geminiApiKey) return (value != null && value.isNotEmpty) ? value : defaultGeminiKey;
-    return value ?? '';
   }
 
   static Future<void> write(String key, String value) async {
-    await _storage.write(key: key, value: value);
+    try {
+      await _storage.write(key: key, value: value);
+    } catch (e) {
+      debugPrint('[SecureStorageService] write error: $e');
+    }
   }
 
   static Future<void> delete(String key) async {
-    await _storage.delete(key: key);
+    try {
+      await _storage.delete(key: key);
+    } catch (e) {
+      debugPrint('[SecureStorageService] delete error: $e');
+    }
   }
 
   /// Convenience getters
